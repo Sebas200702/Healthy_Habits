@@ -7,9 +7,10 @@ const title = 'Home';
 ---
 
 <Layout title={title} pathname={Astro.url.pathname}>
-	<p>This is your home page.</p>
-
-    <h1>Hola como estas</h1>
-	<SignIn>SIGN IN</SignIn>
-	<SignOut>SIGN OUT</SignOut>
+    <main class="flex-1 flex flex-col gap-4 items-center p-4 justify-center">
+        <section class="w-full max-w-md">
+            <h1 class="font-semibold text-2xl dark:text-zinc-100 text-zinc-900 w-full mb-1"></h1>
+            <p class="text-zinc-500 dark:text-zinc-400 text-sm mb-8 w-full"></p>
+        </section>
+    </main>
 </Layout>
