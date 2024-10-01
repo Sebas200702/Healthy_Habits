@@ -1,0 +1,67 @@
+:root {
+  --sideBarColor: #f4f4f9;
+  --hoverColor: #dcdcf5;
+  --textColor: #000000;
+  --accentColor: #ff101f;
+}
+nav {
+  background-color: var(--sideBarColor);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  color: var(--textColor);
+  position: sticky;
+  top: 0;
+  align-self: start;
+  overflow: hidden;
+  transition: ease-in-out 0.3s;
+}
+nav.close {
+  padding: 5px;
+  width: 60px;
+  overflow: hidden;
+  & > ul > li span {
+    display: none;
+  }
+}
+nav ul li {
+  color: var(--textColor);
+  svg {
+    fill: var(--textColor);
+  }
+}
+nav ul li a.active {
+  color: var(--accentColor);
+  svg {
+    fill: var(--accentColor);
+  }
+}
+nav a,
+nav .logo {
+  border-radius: 0.5em;
+  display: flex;
+  padding: 0.85em;
+  align-items: center;
+  gap: 1em;
+}
+
+nav a:hover {
+  transition: ease-in-out 0.2s;
+  background-color: var(--hoverColor);
+  transform: scale(1.02);
+}
+nav svg {
+  flex-shrink: 0;
+  fill: var(--textColor);
+}
+nav a span {
+  flex-grow: 1;
+}
+#toggleBtn {
+  margin-left: auto;
+  padding: 0.7em;
+  cursor: pointer;
+  transition: rotate ease-in-out 0.3s;
+}
+.rotate {
+  rotate: -180deg;
+}

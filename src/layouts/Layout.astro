@@ -1,0 +1,70 @@
+---
+
+import SideBar from '../components/SideBar.jsx'
+import ViewTransitions from 'astro/components/ViewTransitions.astro';
+interface Props {
+	title: string;
+    pathname: string;
+}
+const { title } = Astro.props;
+const { pathname } = Astro.url;
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+        <ViewTransitions />
+	</head>
+	<body>
+        <div id="app" >
+            <aside class="[grid-area:aside]">
+                <SideBar client:load pathname={pathname} transition:persist/>
+            </aside>
+            <main class="[grid-area:main] w-full">
+                <slot />
+            </main>
+        </div>
+	</body>
+</html>
+<style is:global>
+    @import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+    #app {
+        display: grid;
+        background: #F4F4F9;
+        height: 100vh;
+        width: 100vw;
+        grid-template-areas:
+            "aside main main"
+            "aside main main"
+            ;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: auto 5fr;
+        font-family: "SUSE", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-overflow-scrolling: touch;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+</style>

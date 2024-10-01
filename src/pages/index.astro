@@ -1,0 +1,13 @@
+---
+import {SignIn , SignOut} from 'auth-astro/components';
+
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Home';
+---
+
+<Layout title={title}>
+	<p>This is your home page.</p>
+	<SignIn>SIGN IN</SignIn>
+	<SignOut>SIGN OUT</SignOut>
+</Layout>
