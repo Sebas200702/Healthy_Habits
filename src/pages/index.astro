@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 const title = 'Home';
 ---
 
-<Layout title={title}>
+<Layout title={title} pathname={Astro.url.pathname}>
 	<p>This is your home page.</p>
 	<SignIn>SIGN IN</SignIn>
 	<SignOut>SIGN OUT</SignOut>
