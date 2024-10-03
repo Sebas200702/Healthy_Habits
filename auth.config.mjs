@@ -20,7 +20,8 @@ export default defineConfig({
         .from("profiles")
         .select("*")
         .eq("email", user.email);
-      if (result.data) {
+      if (result.data && result.data.length > 0) {
+        console.log(result.data);
         return true;
       }
       const { data, error } = await supabase.from("profiles").upsert({
