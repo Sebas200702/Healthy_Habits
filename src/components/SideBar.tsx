@@ -142,11 +142,11 @@ const SideBar = ({
       : pathname;
   const pages = [
     { title: "Inicio", href: "/", icon: HomeIcon },
-    { title: "Acerca de", href: "/about", icon: AboutIcon },
-    { title: "Blog", href: "/blog", icon: BlogIcon },
-    { title: "Contacto", href: "/contact", icon: ContactIcon },
-    { title: "Proyectos", href: "/projects", icon: ProjectsIcon },
-    { title: "Resumen", href: "/resume", icon: ResumeIcon },
+    { title: "Acerca de", href: "#about", icon: AboutIcon },
+    { title: "Blog", href: "#blog", icon: BlogIcon },
+    { title: "Contacto", href: "#contact", icon: ContactIcon },
+    { title: "Proyectos", href: "#projects", icon: ProjectsIcon },
+    { title: "Resumen", href: "#resume", icon: ResumeIcon },
   ].map((page) => ({ ...page, active: normalizePathName === page.href }));
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => {
