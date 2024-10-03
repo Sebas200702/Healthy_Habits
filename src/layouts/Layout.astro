@@ -2,6 +2,10 @@
 
 import SideBar from '../components/SideBar.jsx'
 import ViewTransitions from 'astro/components/ViewTransitions.astro';
+import { getSession } from "auth-astro/server";
+import type { Sesion } from "../types/types";
+
+const session = await getSession(Astro.request);
 interface Props {
 	title: string;
     pathname: string;
@@ -25,7 +29,7 @@ const { pathname } = Astro.url;
 	<body>
         <div id="app" >
             <aside class="[grid-area:aside]">
-                <SideBar client:load pathname={pathname} transition:persist/>
+                <SideBar client:load pathname={pathname} sesion={session as Sesion } transition:persist/>
             </aside>
             <main class="[grid-area:main] w-full">
                 <slot />
@@ -66,5 +70,30 @@ const { pathname } = Astro.url;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
-
 </style>
+
+<script>
+    import { signIn , signOut } from 'auth-astro/client';
+    const $ = (el: string) => document.querySelector(el);
+    const $user = $(".user");
+    const $signOut = $("#signOut");
+    const $userInfo = $("#userInfo");
+    const $butonGoogle = $("button[value='google']");
+
+    $user?.addEventListener("mouseover", () => {
+    $signOut?.classList.remove("opacity-0");
+    $userInfo?.classList.add("opacity-0");
+    });
+    $user?.addEventListener("mouseout", () => {
+    $signOut?.classList.add("opacity-0");
+    $userInfo?.classList.remove("opacity-0");
+    });
+    $butonGoogle?.addEventListener("click", () => {
+        signIn("google",{
+            redirectTo: "/"
+        });
+    });
+    $signOut?.addEventListener("click", () => {
+        signOut();
+    });
+</script>

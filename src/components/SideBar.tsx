@@ -2,7 +2,7 @@ import LinkElement from "./Link.jsx";
 
 import "../styles/SideBar.css";
 import { useState } from "react";
-import type { Pathname } from "../types/types";
+import type { Pathname, Sesion } from "../types/types";
 
 const AboutIcon = () => {
   return (
@@ -95,19 +95,58 @@ const ResumeIcon = () => {
     </svg>
   );
 };
+const GoogleIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
+    </svg>
+  );
+};
+const SingOutIcon = () => {
+  return (
+    <svg
+      fill="currentColor"
+      height="24"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17 16L21 12M21 12L17 8M21 12L7 12M13 16V17C13 18.6569 11.6569 20 10 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H10C11.6569 4 13 5.34315 13 7V8"
+        stroke="#374151"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+};
 
-const SideBar = ({ pathname }: Pathname) => {
+const SideBar = ({
+  pathname,
+  sesion,
+}: {
+  pathname: Pathname;
+  sesion: Sesion;
+}) => {
   const normalizePathName =
     pathname.length > 1 && pathname.endsWith("/")
       ? pathname.slice(0, -1)
       : pathname;
   const pages = [
-    { title: "Home", href: "/", icon: HomeIcon },
-    { title: "About", href: "/about", icon: AboutIcon },
+    { title: "Inicio", href: "/", icon: HomeIcon },
+    { title: "Acerca de", href: "/about", icon: AboutIcon },
     { title: "Blog", href: "/blog", icon: BlogIcon },
-    { title: "Contact", href: "/contact", icon: ContactIcon },
-    { title: "Projects", href: "/projects", icon: ProjectsIcon },
-    { title: "Resume", href: "/resume", icon: ResumeIcon },
+    { title: "Contacto", href: "/contact", icon: ContactIcon },
+    { title: "Proyectos", href: "/projects", icon: ProjectsIcon },
+    { title: "Resumen", href: "/resume", icon: ResumeIcon },
   ].map((page) => ({ ...page, active: normalizePathName === page.href }));
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => {
@@ -130,6 +169,46 @@ const SideBar = ({ pathname }: Pathname) => {
         {pages.map((page) => (
           <LinkElement link={page} key={page.title} />
         ))}
+        {sesion ? (
+          <li className="user relative mt-12 flex flex-row gap-4 text-pretty justify-between p-2 items-center">
+            <div
+              id="userInfo"
+              className="flex items-center gap-2  transition-all duration-300 ease-in-out"
+            >
+              <img
+                id="avatar"
+                src={sesion?.user?.image}
+                alt="avatar"
+                className="w-8 h-8 rounded-full flex-shrink-0"
+              />
+              <span className="font-semibold text-sm  ">
+                {sesion?.user?.name}
+              </span>
+            </div>
+            <div className="signout absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 w-full transition-all duration-300 ease-in-out p-3">
+              <button
+                id="signOut"
+                className="opacity-0 items-center gap-2 p-2 rounded-md hover:bg-[#dcdcf5]  w-full hover:text-[#ff101f] text-sm"
+              >
+                Salir
+              </button>
+            </div>
+          </li>
+        ) : (
+          <li className="flex flex-row gap-4 text-pretty justify-between p-2 items-center mt-12">
+            <button
+              value="google"
+              name="provider"
+              type="submit"
+              className=" signin flex text-pretty  flex-row gap-1 p-1 bg-[#ff101f]  rounded-md items-center "
+            >
+              <GoogleIcon />
+              <span className="font-light text-xs ">
+                Inicia sesión con Google
+              </span>
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );

@@ -3,6 +3,7 @@
   --hoverColor: #dcdcf5;
   --textColor: #000000;
   --accentColor: #ff101f;
+  --secundaryAccentColor: #ff1038;
 }
 nav {
   background-color: var(--sideBarColor);
@@ -14,6 +15,30 @@ nav {
   align-self: start;
   overflow: hidden;
   transition: ease-in-out 0.3s;
+}
+button.signin {
+  background-color: var(--accentColor);
+  color: var(--sideBarColor);
+  transition: ease-in-out 0.3s;
+  & span {
+    opacity: 0.95;
+    transition: ease-in-out 0.3s;
+  }
+
+  & svg {
+    fill: var(--sideBarColor);
+    opacity: 0.95;
+    transition: ease-in-out 0.3s;
+  }
+  &:hover {
+    background-color: var(--secundaryAccentColor);
+    & span {
+      opacity: 1;
+    }
+    & svg {
+      opacity: 1;
+    }
+  }
 }
 nav.close {
   padding: 5px;
@@ -56,6 +81,7 @@ nav svg {
 nav a span {
   flex-grow: 1;
 }
+
 #toggleBtn {
   margin-left: auto;
   padding: 0.7em;
