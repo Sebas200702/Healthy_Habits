@@ -185,10 +185,10 @@ const SideBar = ({
                 {sesion?.user?.name}
               </span>
             </div>
-            <div className="signout absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 w-full transition-all duration-300 ease-in-out p-3">
+            <div className="signout absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 w-full transition-all duration-300 ease-in-out p-2">
               <button
                 id="signOut"
-                className="opacity-0 items-center gap-2 p-2 rounded-md hover:bg-[#dcdcf5]  w-full hover:text-[#ff101f] text-sm"
+                className="opacity-0 items-center gap-2 p-1 rounded-md hover:bg-[#dcdcf5]  w-full hover:text-[#ff101f] text-sm"
               >
                 Salir
               </button>
