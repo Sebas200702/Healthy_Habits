@@ -1,18 +1,13 @@
 ---
-
-
 import Layout from '../layouts/Layout.astro';
-
 const title = 'Inicio';
 ---
 
 <Layout title={title} pathname={Astro.url.pathname}>
-    <main class="flex-1 flex flex-col gap-4 items-center p-4 justify-center">
         <section class="w-full max-w-md">
-            <h1 class="font-semibold text-2xl dark:text-zinc-100 text-zinc-900 w-full mb-1">
+            <h1 class="font-semibold text-2xl ">
                 Bienvenido a la página de inicio
             </h1>
             <p class="text-zinc-500 dark:text-zinc-400 text-sm mb-8 w-full"></p>
         </section>
-    </main>
 </Layout>

@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Chatcomponet from '../components/Chat.astro';
+---
+
+<Layout title="Chat" pathname={Astro.url.pathname}>
+    <section class="w-full h-full chatSection">
+        <div class="flex flex-col items-center justify-center self-end">
+            <Chatcomponet />
+        </div>
+    </section>
+</Layout>
+<style>
+    .chatSection {
+        display: grid;
+        grid-template-areas: 
+        "header header header"
+        "output output output"
+        "input input input";
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1rem;
+        height: 100vh;
+    }
+</style>
