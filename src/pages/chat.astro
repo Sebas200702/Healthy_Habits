@@ -1,11 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Chatcomponet from '../components/Chat.astro';
+import { getSession } from "auth-astro/server";
+const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname}>
+    
     <section class="w-full h-full chatSection">
-        <div class="flex flex-col items-center justify-center self-end">
+       
+        {
+            sesion ? (
+                <div class="[grid-area:header]">
+                    
+                </div>
+                <div class="[grid-area:output]">
+                    
+                </div>
+            ):(
+                <div class="[grid-area:output]">
+                    <h2>Inicie sesión para poder usar el asistente</h2>
+                </div>
+            )
+        }
+       
+        <div class="[grid-area:input]">
             <Chatcomponet />
         </div>
     </section>
@@ -18,8 +37,35 @@ import Chatcomponet from '../components/Chat.astro';
         "output output output"
         "input input input";
         grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr auto;
         gap: 1rem;
         height: 100vh;
     }
 </style>
+<script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+</script>
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const $ = (el) => document.querySelector(el);
+    const $input = $("#chat");
+    const $output = $("#output");
+    const $send = $("#send");
+    const $apiKey = import.meta.env.GEMINI_API_KEY;
+    const client = new GoogleGenerativeAI($apiKey);
+    const model = client.getGenerativeModel({model: 'gemini-1.5-pro-latest'})
+    $send?.addEventListener("click", async() => {
+        try {
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                $output.innerText = response.text();
+            } catch (error) {
+                console.error('Error al generar contenido:', error);
+            }
+        
+    });
+</script>
