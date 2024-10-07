@@ -2,25 +2,32 @@
 import Layout from '../layouts/Layout.astro';
 import Chatcomponet from '../components/Chat.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
+import Modal from '../components/Modal.astro';
 import { getSession } from "auth-astro/server";
 const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname}>
     <section class="w-full h-full chatSection p-2" >
-        <div class="[grid-area:header]">
+        <div class="[grid-area:header] flex justify-between items-center px-10">
             <h1 class="text-2xl font-bold text-center">Chat</h1>
+            <button id="borrar" class="text-red-500 bg-white hover:bg-red-100 hover:text-red-600 rounded-lg px-4 py-2 text-sm font-semibold self-end">Borrar historial</button>
         </div>
         {
             sesion ? (
                 <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth "  >
+                    <Modal />
                     <ul id="messages" class="flex flex-col max-w-[900px] gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
 
                     </ul>
                 </div>
             ):(
                 <div id="output"  class="[grid-area:output]">
-
+                    <div class="flex flex-col items-center justify-center p-4 h-full w-full">
+                        <h1 class="text-zinc-500 dark:text-zinc-400  mb-8 w-full text-center text-2xl font-semibold">
+                            Inicia sesión con Google para comenzar a chatear
+                        </h1>
+                    </div>
                 </div>
             )
         }
@@ -55,7 +62,7 @@ const sesion = await getSession(Astro.request);
         background-color: #e0e0e0;
     }
 
-    [disabled] {
+    #send[disabled] {
         opacity: 0.5;
         pointer-events: none;
         color: gray;
@@ -74,6 +81,8 @@ const sesion = await getSession(Astro.request);
     const apiKey = import.meta.env.PUBLIC_GEMINI_API_KEY;
     const $ = (el) => document.querySelector(el);
     const $btn = $("#send");
+    const $borrar = $("#borrar");
+    const $modal = $("#popup-modal");
     const $input = $("#chat");
     const $output = $("#output");
     const $form = $("#form");
@@ -83,7 +92,6 @@ const sesion = await getSession(Astro.request);
     const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
     const chat = model.startChat();
     let messages = JSON.parse(localStorage.getItem('messages')) || [];
-    //
     let sessionData = null;
 
 
@@ -98,14 +106,14 @@ if (typeof window !== 'undefined') {
                 addMessage(message.role, message.content , message.time);
             });
         }
-        const InitialMessage = {
+        if (messages.length === 0) { const InitialMessage = {
             role: "Bot",
             content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
             time: new Date().toLocaleTimeString(),
         };
         addMessage("Bot", InitialMessage.content , InitialMessage.time);
         messages.push(InitialMessage);
-
+        }
       } else {
         sessionData = { error: "No hay sesión activa" };
       }
@@ -143,6 +151,20 @@ if (typeof window !== 'undefined') {
         $output.scrollTop = $output.scrollHeight
         localStorage.setItem('messages', JSON.stringify(messages));
 
+    });
+    $borrar.addEventListener('click', () => {
+        $modal.classList.remove("hidden");
+        $modal.querySelector("#close").addEventListener("click", () => {
+            $modal.classList.add("hidden");
+        });
+        $modal.querySelector("#confirm").addEventListener("click", () => {
+            localStorage.removeItem('messages');
+            $modal.classList.add("hidden");
+            window.location.reload();
+        });
+        $modal.querySelector("#cancel").addEventListener("click", () => {
+            $modal.classList.add("hidden");
+        });
     });
     function addMessage(sender: string, message: string, time: string  ) {
         const clonedTemplate = $template.content.cloneNode(true)
