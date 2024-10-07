@@ -1,71 +1,164 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Chatcomponet from '../components/Chat.astro';
+import ChatBoubble from '../components/ChatBoubble.astro';
 import { getSession } from "auth-astro/server";
 const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname}>
-    
-    <section class="w-full h-full chatSection">
-       
+    <section class="w-full h-full chatSection p-2" >
+        <div class="[grid-area:header]">
+            <h1 class="text-2xl font-bold text-center">Chat</h1>
+        </div>
         {
             sesion ? (
-                <div class="[grid-area:header]">
-                    
-                </div>
-                <div class="[grid-area:output]">
-                    
+                <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth "  >
+                    <ul id="messages" class="flex flex-col max-w-[900px] gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
+
+                    </ul>
                 </div>
             ):(
-                <div class="[grid-area:output]">
-                    <h2>Inicie sesión para poder usar el asistente</h2>
+                <div id="output"  class="[grid-area:output]">
+
                 </div>
             )
         }
-       
-        <div class="[grid-area:input]">
+        <div class="[grid-area:input] ">
             <Chatcomponet />
         </div>
     </section>
+    <template id="message-template">
+        <ChatBoubble />
+    </template>
 </Layout>
-<style>
+<style is:global>
     .chatSection {
         display: grid;
-        grid-template-areas: 
+        grid-template-areas:
         "header header header"
         "output output output"
         "input input input";
         grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr auto;
+        grid-template-rows: 0.3fr 3fr auto;
         gap: 1rem;
         height: 100vh;
     }
-</style>
-<script type="importmap">
-    {
-      "imports": {
-        "@google/generative-ai": "https://esm.run/@google/generative-ai"
-      }
+    .You-message {
+        place-self: end;
+        &> div {
+            background-color: #00b0ff;
+        }
+
     }
+    .Bot-message> div {
+        background-color: #e0e0e0;
+    }
+
+    [disabled] {
+        opacity: 0.5;
+        pointer-events: none;
+        color: gray;
+    }
+</style>
+<script is:inline>
+    window.addEventListener('animationend',() => {
+        if (window.location.pathname === "/chat") {
+            window.location.reload();
+        }
+    });
 </script>
-<script type="module">
+
+<script>
     import { GoogleGenerativeAI } from "@google/generative-ai";
+    const apiKey = import.meta.env.PUBLIC_GEMINI_API_KEY;
     const $ = (el) => document.querySelector(el);
+    const $btn = $("#send");
     const $input = $("#chat");
     const $output = $("#output");
-    const $send = $("#send");
-    const $apiKey = import.meta.env.GEMINI_API_KEY;
-    const client = new GoogleGenerativeAI($apiKey);
-    const model = client.getGenerativeModel({model: 'gemini-1.5-pro-latest'})
-    $send?.addEventListener("click", async() => {
-        try {
-                const result = await model.generateContent(prompt);
-                const response = await result.response;
-                $output.innerText = response.text();
-            } catch (error) {
-                console.error('Error al generar contenido:', error);
-            }
-        
+    const $form = $("#form");
+    const $messages = $("#messages");
+    const $template = $("#message-template");
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+    const chat = model.startChat();
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    //
+    let sessionData = null;
+
+
+if (typeof window !== 'undefined') {
+  const fetchSession = async () => {
+    try {
+      const res = await fetch('/api/session');
+      if (res.ok) {
+        sessionData = await res.json();
+        if (messages.length > 0) {
+            messages.forEach(message => {
+                addMessage(message.role, message.content , message.time);
+            });
+        }
+        const InitialMessage = {
+            role: "Bot",
+            content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
+            time: new Date().toLocaleTimeString(),
+        };
+        addMessage("Bot", InitialMessage.content , InitialMessage.time);
+        messages.push(InitialMessage);
+
+      } else {
+        sessionData = { error: "No hay sesión activa" };
+      }
+    } catch (err) {
+      console.error("Error al obtener la sesión:", err);
+    }
+  };
+  fetchSession();
+}
+
+    $form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const messageText = $input.value.trim();
+        if (messageText !== "") {
+            $input.value = ""
+        }
+        addMessage("You", messageText , new Date().toLocaleTimeString())
+        $btn.setAttribute("disabled", "");
+
+        const userMessage = {
+            role: "You",
+            content: messageText,
+            time: new Date().toLocaleTimeString(),
+        };
+        messages.push(userMessage);
+        const reply = await chat.sendMessage(messageText);
+        addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
+        const botMessage = {
+            role: "Bot",
+            content: reply.response.text(),
+            time: new Date().toLocaleTimeString(),
+        };
+        messages.push(botMessage);
+        $btn.removeAttribute('disabled')
+        $output.scrollTop = $output.scrollHeight
+        localStorage.setItem('messages', JSON.stringify(messages));
+
     });
+    function addMessage(sender: string, message: string, time: string  ) {
+        const clonedTemplate = $template.content.cloneNode(true)
+
+        const $messageContainer = clonedTemplate.querySelector("#message-container")
+        const $who = clonedTemplate.querySelector("#sender-name");
+        const $time = clonedTemplate.querySelector("#time");
+        const $img = clonedTemplate.querySelector("#sender-img");
+        const $text = clonedTemplate.querySelector("#message");
+
+        $messageContainer.classList.add(`${sender}-message`);
+
+        $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
+        $text.textContent = message;
+        $time.textContent = time;
+        $img.src = sender === "You" ? sessionData?.user?.image : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+        $messages.appendChild($messageContainer);
+    }
 </script>

@@ -109,22 +109,22 @@ const GoogleIcon = () => {
     </svg>
   );
 };
-const SingOutIcon = () => {
+const ChatIcon = () => {
   return (
     <svg
-      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
       height="24"
       viewBox="0 0 24 24"
-      width="24"
-      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <path
-        d="M17 16L21 12M21 12L17 8M21 12L7 12M13 16V17C13 18.6569 11.6569 20 10 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H10C11.6569 4 13 5.34315 13 7V8"
-        stroke="#374151"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M17.802 17.292s.077 -.055 .2 -.149c1.843 -1.425 3 -3.49 3 -5.789c0 -4.286 -4.03 -7.764 -9 -7.764c-4.97 0 -9 3.478 -9 7.764c0 4.288 4.03 7.646 9 7.646c.424 0 1.12 -.028 2.088 -.084c1.262 .82 3.104 1.493 4.716 1.493c.499 0 .734 -.41 .414 -.828c-.486 -.596 -1.156 -1.551 -1.416 -2.29z" />
+      <path d="M7.5 13.5c2.5 2.5 6.5 2.5 9 0" />
     </svg>
   );
 };
@@ -143,7 +143,7 @@ const SideBar = ({
   const pages = [
     { title: "Inicio", href: "/", icon: HomeIcon },
     { title: "Acerca de", href: "#about", icon: AboutIcon },
-    { title: "Blog", href: "#blog", icon: BlogIcon },
+    { title: "Amelia Bot", href: "/chat", icon: ChatIcon },
     { title: "Contacto", href: "#contact", icon: ContactIcon },
     { title: "Proyectos", href: "#projects", icon: ProjectsIcon },
     { title: "Resumen", href: "#resume", icon: ResumeIcon },

@@ -24,14 +24,15 @@ const { pathname } = Astro.url;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-        <ViewTransitions />
+        <ViewTransitions fallback="swap"/>
+
 	</head>
 	<body>
         <div id="app" >
             <aside class="[grid-area:aside]">
                 <SideBar client:load pathname={pathname} sesion={session as Sesion } transition:persist/>
             </aside>
-            <main class="[grid-area:main] w-full">
+            <main class="[grid-area:main] w-full" >
                 <slot />
             </main>
         </div>
@@ -72,9 +73,9 @@ const { pathname } = Astro.url;
     }
 </style>
 
-<script>
+<script >
     import { signIn , signOut } from 'auth-astro/client';
-    const $ = (el: string) => document.querySelector(el);
+    const $ = (el) => document.querySelector(el);
     const $user = $(".user");
     const $signOut = $("#signOut");
     const $userInfo = $("#userInfo");
