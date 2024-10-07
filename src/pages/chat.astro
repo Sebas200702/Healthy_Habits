@@ -77,42 +77,42 @@ const sesion = await getSession(Astro.request);
 </script>
 
 <script>
-    import { GoogleGenerativeAI } from "@google/generative-ai";
-    const apiKey = import.meta.env.PUBLIC_GEMINI_API_KEY;
-    const $ = (el) => document.querySelector(el);
-    const $btn = $("#send");
-    const $borrar = $("#borrar");
-    const $modal = $("#popup-modal");
-    const $input = $("#chat");
-    const $output = $("#output");
-    const $form = $("#form");
-    const $messages = $("#messages");
-    const $template = $("#message-template");
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
-    const chat = model.startChat();
-    let messages = JSON.parse(localStorage.getItem('messages')) || [];
-    let sessionData = null;
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
+const apiKey: string = import.meta.env.PUBLIC_GEMINI_API_KEY;
+const $ = (el: string): HTMLElement | null => document.querySelector(el);
+const $btn: HTMLElement | null = $("#send");
+const $borrar: HTMLElement | null = $("#borrar");
+const $modal: HTMLElement | null = $("#popup-modal");
+const $input: HTMLInputElement | null = $("#chat") as HTMLInputElement;
+const $output: HTMLElement | null = $("#output");
+const $form: HTMLFormElement | null = $("#form") as HTMLFormElement;
+const $messages: HTMLElement | null = $("#messages");
+const $template: HTMLTemplateElement | null = $("#message-template") as HTMLTemplateElement;
+const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const chat = model.startChat();
+let messages: Array<{ role: string; content: string; time: string }> = JSON.parse(localStorage.getItem('messages') || '[]');
+let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
 
 if (typeof window !== 'undefined') {
-  const fetchSession = async () => {
+  const fetchSession = async (): Promise<void> => {
     try {
-      const res = await fetch('/api/session');
+      const res: Response = await fetch('/api/session');
       if (res.ok) {
         sessionData = await res.json();
         if (messages.length > 0) {
-            messages.forEach(message => {
-                addMessage(message.role, message.content , message.time);
-            });
+          messages.forEach(message => {
+            addMessage(message.role, message.content, message.time);
+          });
         }
-        if (messages.length === 0) { const InitialMessage = {
+        if (messages.length === 0) {
+          const InitialMessage = {
             role: "Bot",
             content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
             time: new Date().toLocaleTimeString(),
-        };
-        addMessage("Bot", InitialMessage.content , InitialMessage.time);
-        messages.push(InitialMessage);
+          };
+          addMessage("Bot", InitialMessage.content, InitialMessage.time);
+          messages.push(InitialMessage);
         }
       } else {
         sessionData = { error: "No hay sesión activa" };
@@ -124,63 +124,80 @@ if (typeof window !== 'undefined') {
   fetchSession();
 }
 
-    $form?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const messageText = $input.value.trim();
-        if (messageText !== "") {
-            $input.value = ""
-        }
-        addMessage("You", messageText , new Date().toLocaleTimeString())
-        $btn.setAttribute("disabled", "");
+$form?.addEventListener('submit', async (e: Event) => {
+  e.preventDefault();
+  const messageText: string = $input.value.trim();
+  if (messageText !== "") {
+    $input.value = "";
+  }
+  addMessage("You", messageText, new Date().toLocaleTimeString());
+  $btn?.setAttribute("disabled", "");
 
-        const userMessage = {
-            role: "You",
-            content: messageText,
-            time: new Date().toLocaleTimeString(),
-        };
-        messages.push(userMessage);
-        const reply = await chat.sendMessage(messageText);
-        addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
-        const botMessage = {
-            role: "Bot",
-            content: reply.response.text(),
-            time: new Date().toLocaleTimeString(),
-        };
-        messages.push(botMessage);
-        $btn.removeAttribute('disabled')
-        $output.scrollTop = $output.scrollHeight
-        localStorage.setItem('messages', JSON.stringify(messages));
+  const userMessage = {
+    role: "You",
+    content: messageText,
+    time: new Date().toLocaleTimeString(),
+  };
+  messages.push(userMessage);
+  const reply = await chat.sendMessage(messageText);
+  addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
+  const botMessage = {
+    role: "Bot",
+    content: reply.response.text(),
+    time: new Date().toLocaleTimeString(),
+  };
+  messages.push(botMessage);
+  $btn.removeAttribute('disabled');
+  if ($output) {
+    $output.scrollTop = $output.scrollHeight;
+  }
+  localStorage.setItem('messages', JSON.stringify(messages));
+});
 
+$borrar.addEventListener('click', () => {
+  if ($modal) {
+    $modal.classList.remove("hidden");
+    $modal.querySelector("#close")?.addEventListener("click", () => {
+      $modal.classList.add("hidden");
     });
-    $borrar.addEventListener('click', () => {
-        $modal.classList.remove("hidden");
-        $modal.querySelector("#close").addEventListener("click", () => {
-            $modal.classList.add("hidden");
-        });
-        $modal.querySelector("#confirm").addEventListener("click", () => {
-            localStorage.removeItem('messages');
-            $modal.classList.add("hidden");
-            window.location.reload();
-        });
-        $modal.querySelector("#cancel").addEventListener("click", () => {
-            $modal.classList.add("hidden");
-        });
+    $modal.querySelector("#confirm")?.addEventListener("click", () => {
+      localStorage.removeItem('messages');
+      $modal.classList.add("hidden");
+      window.location.reload();
     });
-    function addMessage(sender: string, message: string, time: string  ) {
-        const clonedTemplate = $template.content.cloneNode(true)
+    $modal.querySelector("#cancel")?.addEventListener("click", () => {
+      $modal.classList.add("hidden");
+    });
+  }
+});
 
-        const $messageContainer = clonedTemplate.querySelector("#message-container")
-        const $who = clonedTemplate.querySelector("#sender-name");
-        const $time = clonedTemplate.querySelector("#time");
-        const $img = clonedTemplate.querySelector("#sender-img");
-        const $text = clonedTemplate.querySelector("#message");
+function addMessage(sender: string, message: string, time: string): void {
+  const clonedTemplate: DocumentFragment = $template.content.cloneNode(true);
 
-        $messageContainer.classList.add(`${sender}-message`);
+  const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
+  const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
+  const $time: HTMLElement | null = clonedTemplate.querySelector("#time");
+  const $img: HTMLImageElement | null = clonedTemplate.querySelector("#sender-img") as HTMLImageElement;
+  const $text: HTMLElement | null = clonedTemplate.querySelector("#message");
 
-        $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
-        $text.textContent = message;
-        $time.textContent = time;
-        $img.src = sender === "You" ? sessionData?.user?.image : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
-        $messages.appendChild($messageContainer);
-    }
+  if ($messageContainer) {
+    $messageContainer.classList.add(`${sender}-message`);
+  }
+
+  if ($who) {
+    $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
+  }
+  if ($text) {
+    $text.textContent = message;
+  }
+  if ($time) {
+    $time.textContent = time;
+  }
+  if ($img) {
+    $img.src = sender === "You" ? sessionData?.user?.image : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+  }
+  if ($messages) {
+    $messages.appendChild($messageContainer);
+  }
+}
 </script>
