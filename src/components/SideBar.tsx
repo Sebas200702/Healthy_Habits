@@ -1,7 +1,7 @@
 import LinkElement from "./Link.jsx";
-
+import { SkeletonSideBar } from "./SkeletonSideBar";
 import "../styles/SideBar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Pathname, Sesion } from "../types/types";
 
 const AboutIcon = () => {
@@ -27,19 +27,6 @@ const ArrowIcon = () => {
       fill="#5f6368"
     >
       <path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z" />
-    </svg>
-  );
-};
-const BlogIcon = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="24px"
-      viewBox="0 -960 960 960"
-      width="24px"
-      fill="#5f6368"
-    >
-      <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
     </svg>
   );
 };
@@ -128,7 +115,6 @@ const ChatIcon = () => {
     </svg>
   );
 };
-
 const SideBar = ({
   pathname,
   sesion,
@@ -140,6 +126,7 @@ const SideBar = ({
     pathname.length > 1 && pathname.endsWith("/")
       ? pathname.slice(0, -1)
       : pathname;
+
   const pages = [
     { title: "Inicio", href: "/", icon: HomeIcon },
     { title: "Acerca de", href: "#about", icon: AboutIcon },
@@ -148,19 +135,45 @@ const SideBar = ({
     { title: "Proyectos", href: "#projects", icon: ProjectsIcon },
     { title: "Resumen", href: "#resume", icon: ResumeIcon },
   ].map((page) => ({ ...page, active: normalizePathName === page.href }));
+  const [isReady, setIsReady] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("sidebarState");
+      if (savedState !== null) {
+        setIsOpen(JSON.parse(savedState));
+      }
+      setTimeout(() => {
+        setIsReady(true);
+      }, 1000);
+    }
+  }, []);
+
   const toggle = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => {
+      const newState = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("sidebarState", JSON.stringify(newState));
+      }
+      return newState;
+    });
   };
 
+  if (!isReady) {
+    return <SkeletonSideBar isOpen={isOpen} />;
+  }
+
   return (
-    <nav className={`flex flex-col p-3 w-48 h-full ${isOpen ? "" : "close"}`}>
+    <nav
+      className={`flex flex-col p-3 w-48 h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky top-0 z-50 rounded-md`}
+    >
       <ul className="flex flex-col gap-4 ">
         <li className="flex flex-row gap-4">
-          <span className="logo">Logo</span>
+          <span className=" flex p-3 logo rounded-lg ">Logo</span>
           <button
             id="toggleBtn"
-            className={isOpen ? "" : "rotate"}
+            className={`${isOpen ? "" : "rotate"} ml-auto p-3 cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
             onClick={toggle}
           >
             <ArrowIcon />
@@ -200,10 +213,10 @@ const SideBar = ({
               value="google"
               name="provider"
               type="submit"
-              className=" signin flex text-pretty  flex-row gap-1 p-1 bg-[#ff101f]  rounded-md items-center "
+              className=" signin flex text-pretty flex-row gap-1 p-1 bg-[#ff101f] rounded-md items-center transition-all duration-300 ease-in-out hover:bg-[#ff1068] hover:scale-[1.02] hover:opacity-100"
             >
               <GoogleIcon />
-              <span className="font-light text-xs ">
+              <span className="font-semibold text-sm text-balance opacity-75">
                 Inicia sesión con Google
               </span>
             </button>
