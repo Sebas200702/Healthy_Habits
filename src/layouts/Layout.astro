@@ -74,27 +74,28 @@ const { pathname } = Astro.url;
 </style>
 
 <script >
-    import { signIn , signOut } from 'auth-astro/client';
-    const $ = (el) => document.querySelector(el);
-    const $user = $(".user");
-    const $signOut = $("#signOut");
-    const $userInfo = $("#userInfo");
-    const $butonGoogle = $("button[value='google']");
+import { signIn, signOut } from 'auth-astro/client';
 
-    $user?.addEventListener("mouseover", () => {
+const $: (el: string) => Element | null = (el) => document.querySelector(el);
+const $user: Element | null = $(".user");
+const $signOut: Element | null = $("#signOut");
+const $userInfo: Element | null = $("#userInfo");
+const $butonGoogle: Element | null = $("button[value='google']");
+
+$user?.addEventListener("mouseover", (): void => {
     $signOut?.classList.remove("opacity-0");
     $userInfo?.classList.add("opacity-0");
-    });
-    $user?.addEventListener("mouseout", () => {
+});
+$user?.addEventListener("mouseout", (): void => {
     $signOut?.classList.add("opacity-0");
     $userInfo?.classList.remove("opacity-0");
+});
+$butonGoogle?.addEventListener("click", (): void => {
+    signIn("google", {
+        redirectTo: "/"
     });
-    $butonGoogle?.addEventListener("click", () => {
-        signIn("google",{
-            redirectTo: "/"
-        });
-    });
-    $signOut?.addEventListener("click", () => {
-        signOut();
-    });
+});
+$signOut?.addEventListener("click", (): void => {
+    signOut();
+});
 </script>

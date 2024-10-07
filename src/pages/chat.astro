@@ -147,14 +147,14 @@ $form?.addEventListener('submit', async (e: Event) => {
     time: new Date().toLocaleTimeString(),
   };
   messages.push(botMessage);
-  $btn.removeAttribute('disabled');
+  $btn?.removeAttribute('disabled');
   if ($output) {
     $output.scrollTop = $output.scrollHeight;
   }
   localStorage.setItem('messages', JSON.stringify(messages));
 });
 
-$borrar.addEventListener('click', () => {
+$borrar?.addEventListener('click', () => {
   if ($modal) {
     $modal.classList.remove("hidden");
     $modal.querySelector("#close")?.addEventListener("click", () => {
@@ -172,7 +172,7 @@ $borrar.addEventListener('click', () => {
 });
 
 function addMessage(sender: string, message: string, time: string): void {
-  const clonedTemplate: DocumentFragment = $template.content.cloneNode(true);
+  const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
 
   const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
   const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
@@ -185,7 +185,9 @@ function addMessage(sender: string, message: string, time: string): void {
   }
 
   if ($who) {
+    if(sessionData?.user?.name) {
     $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
+    }
   }
   if ($text) {
     $text.textContent = message;
@@ -194,10 +196,12 @@ function addMessage(sender: string, message: string, time: string): void {
     $time.textContent = time;
   }
   if ($img) {
+    if (sessionData?.user?.image) {
     $img.src = sender === "You" ? sessionData?.user?.image : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+    }
   }
   if ($messages) {
-    $messages.appendChild($messageContainer);
+    $messages.appendChild($messageContainer as HTMLElement);
   }
 }
 </script>
