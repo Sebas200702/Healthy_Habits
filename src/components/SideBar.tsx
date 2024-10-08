@@ -1,5 +1,5 @@
 import LinkElement from "./Link.jsx";
-import { SkeletonSideBar } from "./SkeletonSideBar";
+
 import "../styles/SideBar.css";
 import { useState, useEffect } from "react";
 import type { Pathname, Sesion } from "../types/types";
@@ -146,7 +146,7 @@ const SideBar = ({
       }
       setTimeout(() => {
         setIsReady(true);
-      }, 1000);
+      }, 500);
     }
   }, []);
 
@@ -161,7 +161,6 @@ const SideBar = ({
   };
 
   if (!isReady) {
-    return <SkeletonSideBar isOpen={isOpen} />;
   }
 
   return (
