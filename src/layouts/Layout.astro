@@ -75,8 +75,7 @@ const { pathname } = Astro.url;
 
 <script >
 import { signIn, signOut } from 'auth-astro/client';
-
-const $: (el: string) => Element | null = (el) => document.querySelector(el);
+import {$} from './../utils'
 const $user: Element | null = $(".user");
 const $signOut: Element | null = $("#signOut");
 const $userInfo: Element | null = $("#userInfo");
