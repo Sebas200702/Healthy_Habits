@@ -146,7 +146,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
 
   return (
     <nav
-      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50  rounded-md`}
+      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
       <ul className="flex md:flex-col flex-row gap-2 md:gap-4 items-center md:items-start justify-center md:justify-start ">
         <li className="flex flex-row md:gap-4 gap-2 ">

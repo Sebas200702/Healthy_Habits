@@ -18,6 +18,14 @@ nav.close {
     display: none;
   }
 }
+@media screen and (max-width: 768px) {
+  nav.close {
+    width: 100%;
+    & > ul > li :first-child {
+      display: flex;
+    }
+  }
+}
 nav ul li {
   color: var(--textColor);
   svg {
