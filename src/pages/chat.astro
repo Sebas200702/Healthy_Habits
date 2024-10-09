@@ -9,10 +9,10 @@ const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
-    <section class="w-full h-full chatSection p-2" transition:animate="none" >
+    <section class="w-full h-full max-h-[500px] chatSection p-2" transition:animate="none" >
         {
             sesion ? (
-                <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth max-h-[400px] "  >
+                <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth "  >
                     <Modal />
                     <ul id="messages" class="flex flex-col md:max-w-[900px]  gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
                     </ul>

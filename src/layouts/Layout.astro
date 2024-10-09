@@ -35,7 +35,7 @@ const { sesion } = Astro.props;
             <aside class="[grid-area:aside] ">
                 <SideBar client:load pathname={pathname} transition:persist/>
             </aside>
-            <main class="[grid-area:main] " >
+            <main class="[grid-area:main]" >
                 <slot />
             </main>
         </div>
