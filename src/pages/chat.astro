@@ -9,12 +9,12 @@ const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
-    <section class="w-full h-full  chatSection p-2" transition:animate="none" >
+    <section class="w-full h-full max-h-[500px] chatSection p-2 md:max-h-full" transition:animate="none" >
         {
             sesion ? (
-                <div id="output" class="[grid-area:output] max-h-[650px] md:max-h-full items-center overflow-y-auto scroll-smooth  "  >
-                    <Modal />
-                    <ul id="messages" class="flex flex-col md:max-w-[900px]  gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
+                <div id="output" class="[grid-area:output] max-h-[500px] md:max-h-full items-center overflow-y-auto scroll-smooth  "  >
+                    <Modal message='borrar el historial' confirm='borrar'/>
+                    <ul id="messages" class="flex flex-col md:max-w-[900px] max-h-[500px] md:max-h-full gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
                     </ul>
                 </div>
                 <div class="[grid-area:input] ">
@@ -79,8 +79,8 @@ const getApiKey = async () => {
 };
 const apiKey = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c'
 const $btn: HTMLElement | null = $("#send");
+const $userDropdown: HTMLElement | null = $("#userDropdown");
 const $borrar: HTMLElement | null = $("#borrar");
-const $modal: HTMLElement | null = $("#popup-modal");
 const $input: HTMLInputElement | null = $("#chat") as HTMLInputElement;
 const $output: HTMLElement | null = $("#output");
 const $form: HTMLFormElement | null = $("#form") as HTMLFormElement;
@@ -158,19 +158,25 @@ $form?.addEventListener('submit', async (e: Event) => {
 });
 
 $borrar?.addEventListener('click', () => {
-  if ($modal) {
-    $modal.classList.remove("hidden");
-    $modal.querySelector("#close")?.addEventListener("click", () => {
-      $modal.classList.add("hidden");
-    });
-    $modal.querySelector("#confirm")?.addEventListener("click", () => {
-      localStorage.removeItem('messages');
-      $modal.classList.add("hidden");
-      window.location.reload();
-    });
-    $modal.querySelector("#cancel")?.addEventListener("click", () => {
-      $modal.classList.add("hidden");
-    });
+  if ($userDropdown) {
+    $userDropdown.classList.add("hidden");
+  }
+  if($output){
+    const $modal = $output.querySelector("#popup-modal");
+    if ($modal) {
+      $modal.classList.remove("hidden");
+      $modal.querySelector("#close")?.addEventListener("click", () => {
+        $modal.classList.add("hidden");
+      });
+      $modal.querySelector("#confirm")?.addEventListener("click", () => {
+        localStorage.removeItem('messages');
+        $modal.classList.add("hidden");
+        window.location.reload();
+      });
+      $modal.querySelector("#cancel")?.addEventListener("click", () => {
+        $modal.classList.add("hidden");
+      });
+    }
   }
 });
 

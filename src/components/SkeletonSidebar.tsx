@@ -5,7 +5,7 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
     <nav
       className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
-      <ul className="flex gap-4 md:flex-col flex-row  items-center  md:items-start justify-center md:justify-start ">
+      <ul className="flex gap-2 md:gap-4 md:flex-col flex-row  items-center  md:items-start justify-center md:justify-start ">
         <li className="flex flex-row gap-2 md:gap-4 h-12 items-center">
           {isOpen && (
             <div className="skeleton-logo  flex md:p-3 p-2 logo rounded-lg"></div>
