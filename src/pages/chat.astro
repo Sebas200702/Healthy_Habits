@@ -76,14 +76,6 @@ const sesion = await getSession(Astro.request);
 <script>
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {$} from './../utils'
-const getApiKey = async () => {
-  const res = await fetch('/api/apiKey');
-  if (res.ok) {
-    return await res.json();
-  } else {
-    throw new Error('Error al obtener la apiKey');
-  }
-};
 const apiKey = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c'
 const $btn: HTMLElement | null = $("#send");
 const $userDropdown: HTMLElement | null = $("#userDropdown");
@@ -96,31 +88,44 @@ const $template: HTMLTemplateElement | null = $("#message-template") as HTMLTemp
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const chat = model.startChat();
-let messages: Array<{ role: string; content: string; time: string }> = JSON.parse(localStorage.getItem('messages') || '[]');
-let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
+let sessionData: { user?: { name: string; image: string }; error?: string } | null= null;
 let isLoading: boolean = false;
+const getMessages = async ():Promise<object> =>{
+    const res: Response = await fetch('/api/messages',{
+        method: 'POST',
+        body: JSON.stringify({
+            userName: sessionData?.user?.name
+        })
+    }
+    );
+    if(res.ok)return await res.json();
+
+    return {error: 'No hay mensajes de chat'};
+}
 
 if (typeof window !== 'undefined') {
-    isLoading = true;
   const fetchSession = async (): Promise<void> => {
     try {
       const res: Response = await fetch('/api/session');
       if (res.ok) {
         sessionData = await res.json();
+        const result = await getMessages();
+        const messages = result.data
+
         if (messages.length > 0) {
-          messages.forEach(message => {
+           messages.forEach(message => {
             addMessage(message.role, message.content, message.time);
           });
-        }
-        if (messages.length === 0) {
-          const InitialMessage = {
-            role: "Bot",
-            content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
-            time: new Date().toLocaleTimeString(),
-          };
-          addMessage("Bot", InitialMessage.content, InitialMessage.time);
-          messages.push(InitialMessage);
-        }
+         }
+         if (messages.length === 0) {
+           const InitialMessage = {
+             role: "Bot",
+             content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
+             time: new Date().toLocaleTimeString(),
+           };
+           addMessage("Bot", InitialMessage.content, InitialMessage.time);
+
+         }
       } else {
         sessionData = { error: "No hay sesión activa" };
       }
