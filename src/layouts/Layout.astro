@@ -31,7 +31,7 @@ const { sesion } = Astro.props;
         <div id="app">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
-                <Header sesion={sesion} pathname={pathname} />
+                <Header sesion={sesion} pathname={pathname} title={title} />
             </header>
             <aside class="[grid-area:aside] ">
                 <SideBar client:load pathname={pathname} transition:persist/>

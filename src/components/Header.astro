@@ -5,13 +5,17 @@ import {User} from './User';
 interface Props {
     sesion: Sesion;
     pathname: string;
+    title: string;
 }
 const { sesion } = Astro.props;
 const { pathname } = Astro.props;
+const { title } = Astro.props;
 ---
 
-<section class="flex flex-row-reverse p-2 relative">
-    <ul>
+<section class=" p-2 relative">
+
+    <ul class="flex row-auto justify-between p-2 ">
+        <li class="text-2xl font-semibold">{title}</li>
     {sesion ? (
         <User sesion={sesion}  pathname={pathname} client:load transition:persist/>
 
