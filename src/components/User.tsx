@@ -28,7 +28,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
 
       <div
         id="userDropdown"
-        className="z-10 absolute md:-translate-x-full translate-x-full hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+        className="z-10 absolute right-0  md:-translate-x-1/2 -translate-x-1/3 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
       >
         <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div>{sesion?.user?.name}</div>
