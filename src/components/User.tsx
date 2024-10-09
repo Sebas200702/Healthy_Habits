@@ -18,7 +18,6 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     <>
       <img
         id="avatarButton"
-        type="button"
         data-dropdown-toggle="userDropdown"
         data-dropdown-placement="bottom-start"
         className="w-10 h-10 rounded-full cursor-pointer "
