@@ -2,24 +2,23 @@
 import Layout from '../layouts/Layout.astro';
 import Chatcomponet from '../components/Chat.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
+import type{ Sesion } from '../types/types';
 import Modal from '../components/Modal.astro';
 import { getSession } from "auth-astro/server";
 const sesion = await getSession(Astro.request);
 ---
 
-<Layout title="Chat" pathname={Astro.url.pathname}>
+<Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
     <section class="w-full h-full chatSection p-2" transition:animate="none" >
-        <div class="[grid-area:header] flex justify-between items-center px-10">
-            <h1 class="text-2xl font-bold text-center">Chat</h1>
-            <button id="borrar" class="text-red-500 bg-white hover:bg-red-100 hover:text-red-600 rounded-lg px-4 py-2 text-sm font-semibold self-end">Borrar historial</button>
-        </div>
         {
             sesion ? (
-                <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth "  >
+                <div id="output" class="[grid-area:output] items-center overflow-y-auto scroll-smooth max-h-[400px] "  >
                     <Modal />
-                    <ul id="messages" class="flex flex-col max-w-[900px] gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
-
+                    <ul id="messages" class="flex flex-col md:max-w-[900px]  gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
                     </ul>
+                </div>
+                <div class="[grid-area:input] ">
+                    <Chatcomponet />
                 </div>
             ):(
                 <div id="output"  class="[grid-area:output]">
@@ -31,9 +30,6 @@ const sesion = await getSession(Astro.request);
                 </div>
             )
         }
-        <div class="[grid-area:input] ">
-            <Chatcomponet />
-        </div>
     </section>
     <template id="message-template">
         <ChatBoubble />
@@ -43,18 +39,18 @@ const sesion = await getSession(Astro.request);
     .chatSection {
         display: grid;
         grid-template-areas:
-        "header header header"
         "output output output"
         "input input input";
         grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 0.3fr 3fr auto;
+        grid-template-rows:  3fr auto;
         gap: 1rem;
-        height: 100vh;
+        height: 100%;
     }
     .You-message {
         place-self: end;
         &> div {
             background-color: #00b0ff;
+            box-shadow: 0 20px 25px -5px rgba(12, 1, 112, 0.5), 0 10px 10px -5px rgba(54, 6, 143, 0.2);
         }
 
     }
@@ -81,7 +77,7 @@ const getApiKey = async () => {
     throw new Error('Error al obtener la apiKey');
   }
 };
-const  apiKey = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c'
+const apiKey = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c'
 const $btn: HTMLElement | null = $("#send");
 const $borrar: HTMLElement | null = $("#borrar");
 const $modal: HTMLElement | null = $("#popup-modal");
@@ -95,8 +91,10 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const chat = model.startChat();
 let messages: Array<{ role: string; content: string; time: string }> = JSON.parse(localStorage.getItem('messages') || '[]');
 let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
+let isLoading: boolean = false;
 
 if (typeof window !== 'undefined') {
+    isLoading = true;
   const fetchSession = async (): Promise<void> => {
     try {
       const res: Response = await fetch('/api/session');
@@ -124,6 +122,9 @@ if (typeof window !== 'undefined') {
     }
   };
   fetchSession();
+}
+if (isLoading) {
+
 }
 
 $form?.addEventListener('submit', async (e: Event) => {
@@ -199,7 +200,7 @@ function addMessage(sender: string, message: string, time: string): void {
   }
   if ($img) {
     if (sessionData?.user?.image) {
-    $img.src = sender === "You" ? sessionData?.user?.image : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+    $img.src = sender === "You" ? sessionData?.user?.image : 'https://flowbite.com/docs/images/people/profile-picture-4.jpg';
     }
   }
   if ($messages) {

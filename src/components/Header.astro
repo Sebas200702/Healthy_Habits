@@ -1,0 +1,34 @@
+---
+import GoogleIcon from './icons/GoogleIcon.astro';
+import type { Sesion } from '../types/types';
+import {User} from './User';
+interface Props {
+    sesion: Sesion;
+    pathname: string;
+}
+const { sesion } = Astro.props;
+const { pathname } = Astro.props;
+---
+
+<section class="flex flex-row-reverse p-2 relative">
+    <ul>
+    {sesion ? (
+        <User sesion={sesion}  pathname={pathname} client:load transition:persist/>
+
+      ) : (
+        <li class="flex flex-row gap-4 text-pretty justify-between p-2 items-center ">
+          <button
+            value="google"
+            name="provider"
+            type="submit"
+            class=" signin flex text-pretty flex-row gap-1 p-1 bg-[#ff101f] rounded-md items-center transition-all duration-300 ease-in-out hover:bg-[#ff1068] hover:scale-[1.02] hover:opacity-100"
+          >
+            <GoogleIcon />
+            <span class="font-semibold text-sm text-balance opacity-75">
+              Inicia sesión con Google
+            </span>
+          </button>
+        </li>
+      )}
+      </ul>
+</section>

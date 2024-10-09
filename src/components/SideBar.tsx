@@ -1,8 +1,8 @@
 import LinkElement from "./Link.jsx";
-
+import { SkeletonSidebar } from "./SkeletonSidebar";
 import "../styles/SideBar.css";
 import { useState, useEffect } from "react";
-import type { Pathname, Sesion } from "../types/types";
+import type { Pathname } from "../types/types";
 
 const AboutIcon = () => {
   return (
@@ -82,20 +82,7 @@ const ResumeIcon = () => {
     </svg>
   );
 };
-const GoogleIcon = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
-    </svg>
-  );
-};
+
 const ChatIcon = () => {
   return (
     <svg
@@ -115,18 +102,11 @@ const ChatIcon = () => {
     </svg>
   );
 };
-const SideBar = ({
-  pathname,
-  sesion,
-}: {
-  pathname: Pathname;
-  sesion: Sesion;
-}) => {
+const SideBar = ({ pathname }: { pathname: Pathname }) => {
   const normalizePathName =
     pathname.length > 1 && pathname.endsWith("/")
       ? pathname.slice(0, -1)
       : pathname;
-
   const pages = [
     { title: "Inicio", href: "/", icon: HomeIcon },
     { title: "Acerca de", href: "#about", icon: AboutIcon },
@@ -146,7 +126,7 @@ const SideBar = ({
       }
       setTimeout(() => {
         setIsReady(true);
-      }, 500);
+      }, 600);
     }
   }, []);
 
@@ -161,18 +141,19 @@ const SideBar = ({
   };
 
   if (!isReady) {
+    return <SkeletonSidebar isOpen={isOpen} />;
   }
 
   return (
     <nav
-      className={`flex flex-col p-3 w-48 h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky top-0 z-50 rounded-md`}
+      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
-      <ul className="flex flex-col gap-4 ">
-        <li className="flex flex-row gap-4">
-          <span className=" flex p-3 logo rounded-lg ">Logo</span>
+      <ul className="flex md:flex-col flex-row gap-4 items-center md:items-start justify-center md:justify-start ">
+        <li className="flex flex-row gap-4 ">
+          <span className=" flex md:p-3 p-2 logo rounded-lg ">Logo</span>
           <button
             id="toggleBtn"
-            className={`${isOpen ? "" : "rotate"} ml-auto p-3 cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
+            className={`${isOpen ? "" : "rotate"} md:ml-auto p-3 hidden md:flex cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
             onClick={toggle}
           >
             <ArrowIcon />
@@ -181,46 +162,6 @@ const SideBar = ({
         {pages.map((page) => (
           <LinkElement link={page} key={page.title} />
         ))}
-        {sesion ? (
-          <li className="user relative mt-12 flex flex-row gap-4 text-pretty justify-between p-2 items-center">
-            <div
-              id="userInfo"
-              className="flex items-center gap-2  transition-all duration-300 ease-in-out"
-            >
-              <img
-                id="avatar"
-                src={sesion?.user?.image}
-                alt="avatar"
-                className="w-8 h-8 rounded-full flex-shrink-0"
-              />
-              <span className="font-semibold text-sm  ">
-                {sesion?.user?.name}
-              </span>
-            </div>
-            <div className="signout absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 w-full transition-all duration-300 ease-in-out p-2">
-              <button
-                id="signOut"
-                className="opacity-0 items-center gap-2 p-1 rounded-md hover:bg-[#dcdcf5]  w-full hover:text-[#ff101f] text-sm"
-              >
-                Salir
-              </button>
-            </div>
-          </li>
-        ) : (
-          <li className="flex flex-row gap-4 text-pretty justify-between p-2 items-center mt-12">
-            <button
-              value="google"
-              name="provider"
-              type="submit"
-              className=" signin flex text-pretty flex-row gap-1 p-1 bg-[#ff101f] rounded-md items-center transition-all duration-300 ease-in-out hover:bg-[#ff1068] hover:scale-[1.02] hover:opacity-100"
-            >
-              <GoogleIcon />
-              <span className="font-semibold text-sm text-balance opacity-75">
-                Inicia sesión con Google
-              </span>
-            </button>
-          </li>
-        )}
       </ul>
     </nav>
   );

@@ -1,14 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 const title = 'Inicio';
-import { getSession } from 'auth-astro/server';
+import { getSession } from 'auth-astro/server';;
 import type { Sesion } from '../types/types';
 const sesion = await getSession(Astro.request);
 
 ---
 
-<Layout title={title} pathname={Astro.url.pathname} >
-        <section class="w-full max-w-md">
+<Layout title={title} pathname={Astro.url.pathname} sesion={sesion as Sesion}>
+        <section class="w-full h-full flex flex-col justify-center items-center">
             <h1 class="font-semibold text-2xl ">
                 Bienvenido a la página de inicio
             </h1>

@@ -2,17 +2,17 @@
 
 import SideBar from '../components/SideBar.jsx'
 import ViewTransitions from 'astro/components/ViewTransitions.astro';
-import { getSession } from "auth-astro/server";
+import Header from '../components/Header.astro';
 import type { Sesion } from "../types/types";
 
-const session = await getSession(Astro.request);
 interface Props {
 	title: string;
     pathname: string;
+    sesion: Sesion;
 }
 const { title } = Astro.props;
 const { pathname } = Astro.url;
-
+const { sesion } = Astro.props;
 ---
 
 <!doctype html>
@@ -28,11 +28,14 @@ const { pathname } = Astro.url;
 
 	</head>
 	<body>
-        <div id="app" >
-            <aside class="[grid-area:aside]">
-                <SideBar client:load pathname={pathname} sesion={session as Sesion } transition:persist/>
+        <div id="app">
+            <header class="[grid-area:header]">
+                <Header sesion={sesion} pathname={pathname} />
+            </header>
+            <aside class="[grid-area:aside] ">
+                <SideBar client:load pathname={pathname} transition:persist/>
             </aside>
-            <main class="[grid-area:main] w-full" >
+            <main class="[grid-area:main] " >
                 <slot />
             </main>
         </div>
@@ -46,10 +49,11 @@ const { pathname } = Astro.url;
         height: 100vh;
         width: 100vw;
         grid-template-areas:
+            "aside header header"
             "aside main main"
             "aside main main"
             ;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: .3fr 5fr auto;
         grid-template-columns: auto 5fr;
         font-family: "SUSE", sans-serif;
         font-size: 16px;
@@ -71,24 +75,32 @@ const { pathname } = Astro.url;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
+    @media screen and (max-width: 768px) {
+        #app {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "main main"
+                "aside aside"
+                ;
+            grid-template-rows: .3fr 5fr;
+            grid-template-columns: auto 5fr;
+            height: 100vh;
+            width: 100vw;
+        }
+
+    }
 </style>
 
 <script >
 import { signIn, signOut } from 'auth-astro/client';
 import {$} from './../utils'
-const $user: Element | null = $(".user");
 const $signOut: Element | null = $("#signOut");
-const $userInfo: Element | null = $("#userInfo");
+
 const $butonGoogle: Element | null = $("button[value='google']");
 
-$user?.addEventListener("mouseover", (): void => {
-    $signOut?.classList.remove("opacity-0");
-    $userInfo?.classList.add("opacity-0");
-});
-$user?.addEventListener("mouseout", (): void => {
-    $signOut?.classList.add("opacity-0");
-    $userInfo?.classList.remove("opacity-0");
-});
+
+
 $butonGoogle?.addEventListener("click", (): void => {
     signIn("google", {
         redirectTo: "/"
