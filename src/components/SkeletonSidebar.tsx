@@ -64,7 +64,7 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
         }
         .skeleton-logo {
           width: 48px;
-          height: 48px;
+          height: 36px;
           background-color: #e2e8f0;
         }
         .skeleton-icon {
