@@ -3,7 +3,6 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request }) => {
   const { userName } = await request.json();
-  console.log(userName);
   const { data: userId, error: userError } = await supabase
     .from("profiles")
     .select("id")
