@@ -1,6 +1,6 @@
 import { $ } from "../utils";
 import type { Sesion } from "../types/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface UserProps {
   sesion: Sesion;
@@ -8,22 +8,37 @@ interface UserProps {
 }
 
 export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
+  // Estado inicial de "theme" basado en localStorage o 'dark' por defecto
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "dark";
+    }
+    return "dark";
+  });
+
+  // Efecto para aplicar el tema al cargar el componente
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    // Guardar el tema en localStorage
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   const handleClickUser = (): void => {
     if (typeof window !== "undefined") {
       const $userDropdown: Element | null = $("#userDropdown");
       $userDropdown?.classList.toggle("hidden");
     }
   };
-  const [theme, setTheme] = useState("dark");
+
   const handleClickTheme = (): void => {
-    if (typeof window !== "undefined") {
-      if (theme === "dark") {
-        document.documentElement.classList.remove("dark");
-        setTheme("light");
-      } else {
-        document.documentElement.classList.add("dark");
-        setTheme("dark");
-      }
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
     }
   };
 
