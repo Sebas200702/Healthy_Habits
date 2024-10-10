@@ -75,8 +75,9 @@ const sesion = await getSession(Astro.request);
 
 <script>
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import {$} from './../utils'
-const apiKey = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c'
+import { $ } from './../utils';
+
+const apiKey: string = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c';
 const $btn: HTMLElement | null = $("#send");
 const $userDropdown: HTMLElement | null = $("#userDropdown");
 const $borrar: HTMLElement | null = $("#borrar");
@@ -88,141 +89,152 @@ const $template: HTMLTemplateElement | null = $("#message-template") as HTMLTemp
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const chat = model.startChat();
-let sessionData: { user?: { name: string; image: string }; error?: string } | null= null;
+let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
 let isLoading: boolean = false;
-const getMessages = async ():Promise<object> =>{
-    const res: Response = await fetch('/api/messages',{
+let messages: Array<{ role: string; content: string; time: string }> = [];
+
+const getMessages = async (): Promise<object> => {
+    const res: Response = await fetch('/api/messages', {
         method: 'POST',
         body: JSON.stringify({
             userName: sessionData?.user?.name
         })
-    }
-    );
-    if(res.ok)return await res.json();
+    });
+    if (res.ok) return await res.json();
 
-    return {error: 'No hay mensajes de chat'};
+    return { error: 'No hay mensajes de chat' };
+}
+const saveMessages = async (): Promise<void> => {
+    if (messages.length > 0) {
+        const result = await fetch('/api/messages', {
+            method: 'POST',
+            body: JSON.stringify({
+                messages: messages
+            })
+        });
+    }
 }
 
 if (typeof window !== 'undefined') {
-  const fetchSession = async (): Promise<void> => {
-    try {
-      const res: Response = await fetch('/api/session');
-      if (res.ok) {
-        sessionData = await res.json();
-        const result = await getMessages();
-        const messages = result.data
+    const fetchSession = async (): Promise<void> => {
+        try {
+            const res: Response = await fetch('/api/session');
+            if (res.ok) {
+                sessionData = await res.json();
+                const result = await getMessages();
+                messages = result.data;
 
-        if (messages.length > 0) {
-           messages.forEach(message => {
-            addMessage(message.role, message.content, message.time);
-          });
-         }
-         if (messages.length === 0) {
-           const InitialMessage = {
-             role: "Bot",
-             content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
-             time: new Date().toLocaleTimeString(),
-           };
-           addMessage("Bot", InitialMessage.content, InitialMessage.time);
-
-         }
-      } else {
-        sessionData = { error: "No hay sesión activa" };
-      }
-    } catch (err) {
-      console.error("Error al obtener la sesión:", err);
-    }
-  };
-  fetchSession();
+                if (messages.length > 0) {
+                    messages.forEach(message => {
+                        addMessage(message.role, message.content, message.time);
+                    });
+                }
+                if (messages.length === 0) {
+                    const InitialMessage = {
+                        role: "Bot",
+                        content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
+                        time: new Date().toLocaleTimeString(),
+                    };
+                    addMessage("Bot", InitialMessage.content, InitialMessage.time);
+                }
+            } else {
+                sessionData = { error: "No hay sesión activa" };
+            }
+        } catch (err) {
+            console.error("Error al obtener la sesión:", err);
+        }
+    };
+    fetchSession();
 }
+
 if (isLoading) {
 
 }
 
 $form?.addEventListener('submit', async (e: Event) => {
-  e.preventDefault();
-  const messageText: string = $input.value.trim();
-  if (messageText !== "") {
-    $input.value = "";
-  }
-  addMessage("You", messageText, new Date().toLocaleTimeString());
-  $btn?.setAttribute("disabled", "");
+    e.preventDefault();
+    const messageText: string = $input.value.trim();
+    if (messageText !== "") {
+        $input.value = "";
+    }
+    addMessage("You", messageText, new Date().toLocaleTimeString());
+    $btn?.setAttribute("disabled", "");
 
-  const userMessage = {
-    role: "You",
-    content: messageText,
-    time: new Date().toLocaleTimeString(),
-  };
-  messages.push(userMessage);
-  const reply = await chat.sendMessage(messageText);
-  addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
-  const botMessage = {
-    role: "Bot",
-    content: reply.response.text(),
-    time: new Date().toLocaleTimeString(),
-  };
-  messages.push(botMessage);
-  $btn?.removeAttribute('disabled');
-  if ($output) {
-    $output.scrollTop = $output.scrollHeight;
-  }
-  localStorage.setItem('messages', JSON.stringify(messages));
+    const userMessage = {
+        role: "You",
+        content: messageText,
+        time: new Date().toLocaleTimeString(),
+    };
+    messages.push(userMessage);
+    const reply = await chat.sendMessage(messageText);
+    addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
+    const botMessage = {
+        role: "Bot",
+        content: reply.response.text(),
+        time: new Date().toLocaleTimeString(),
+    };
+    messages.push(botMessage);
+    $btn?.removeAttribute('disabled');
+    if ($output) {
+        $output.scrollTop = $output.scrollHeight;
+    }
+    localStorage.setItem('messages', JSON.stringify(messages));
 });
 
 $borrar?.addEventListener('click', () => {
-  if ($userDropdown) {
-    $userDropdown.classList.add("hidden");
-  }
-  if($output){
-    const $modal = $output.querySelector("#popup-modal");
-    if ($modal) {
-      $modal.classList.remove("hidden");
-      $modal.querySelector("#close")?.addEventListener("click", () => {
-        $modal.classList.add("hidden");
-      });
-      $modal.querySelector("#confirm")?.addEventListener("click", () => {
-        localStorage.removeItem('messages');
-        $modal.classList.add("hidden");
-        window.location.reload();
-      });
-      $modal.querySelector("#cancel")?.addEventListener("click", () => {
-        $modal.classList.add("hidden");
-      });
+    if ($userDropdown) {
+        $userDropdown.classList.add("hidden");
     }
-  }
+    if ($output) {
+        const $modal = $output.querySelector("#popup-modal");
+        if ($modal) {
+            $modal.classList.remove("hidden");
+            $modal.querySelector("#close")?.addEventListener("click", () => {
+                $modal.classList.add("hidden");
+            });
+            $modal.querySelector("#confirm")?.addEventListener("click", () => {
+                localStorage.removeItem('messages');
+                $modal.classList.add("hidden");
+                window.location.reload();
+            });
+            $modal.querySelector("#cancel")?.addEventListener("click", () => {
+                $modal.classList.add("hidden");
+            });
+        }
+    }
 });
 
 function addMessage(sender: string, message: string, time: string): void {
-  const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
+    const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
 
-  const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
-  const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
-  const $time: HTMLElement | null = clonedTemplate.querySelector("#time");
-  const $img: HTMLImageElement | null = clonedTemplate.querySelector("#sender-img") as HTMLImageElement;
-  const $text: HTMLElement | null = clonedTemplate.querySelector("#message");
+    const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
+    const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
+    const $time: HTMLElement | null = clonedTemplate.querySelector("#time");
+    const $img: HTMLImageElement | null = clonedTemplate.querySelector("#sender-img") as HTMLImageElement;
+    const $text: HTMLElement | null = clonedTemplate.querySelector("#message");
 
-  if ($messageContainer) {
-    $messageContainer.classList.add(`${sender}-message`);
-  }
-
-  if ($who) {
-    if(sessionData?.user?.name) {
-    $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
+    if ($messageContainer) {
+        $messageContainer.classList.add(`${sender}-message`);
     }
-  }
-  if ($text) {
-    $text.textContent = message;
-  }
-  if ($time) {
-    $time.textContent = time;
-  }
-  if ($img) {
-    if (sessionData?.user?.image) {
-    $img.src = sender === "You" ? sessionData?.user?.image : 'https://flowbite.com/docs/images/people/profile-picture-4.jpg';
+
+    if ($who) {
+        if (sessionData?.user?.name) {
+            $who.textContent = sender === "You" ? sessionData?.user?.name : 'Amelia';
+        }
     }
-  }
-  if ($messages) {
-    $messages.appendChild($messageContainer as HTMLElement);
-  }
+    if ($text) {
+        $text.textContent = message;
+    }
+    if ($time) {
+        $time.textContent = time;
+    }
+    if ($img) {
+        if (sessionData?.user?.image) {
+            $img.src = sender === "You" ? sessionData?.user?.image : 'https://flowbite.com/docs/images/people/profile-picture-4.jpg';
+        }
+    }
+    if ($messages) {
+        $messages.appendChild($messageContainer as HTMLElement);
+    }
 }
 </script>
