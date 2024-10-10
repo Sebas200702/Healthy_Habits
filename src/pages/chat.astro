@@ -110,17 +110,14 @@ const getMessages = async (): Promise<{ messages: Array<{ role: string; content:
 
     if (res.ok) {
         const data = await res.json();
-
-        // Verifica si el objeto `data` tiene la propiedad `messages` y que sea un array
         if (data && Array.isArray(data.messages)) {
-            return { messages: data.messages }; // Retorna los mensajes si están presentes y son un array
+            return { messages: data.messages };
         } else {
-            return { messages: [] }; // Si no hay mensajes o no es un array, retorna un array vacío
+            return { messages: [] };
         }
     }
-    return { messages: [] }; // En caso de error en la respuesta, retorna un array vacío
+    return { messages: [] };
 };
-
 
 const saveMessage = async (message: { role: string; content: string; created_at?: string, userName: string | undefined }): Promise<void> => {
     const res: Response = await fetch('/api/addMessages', {
@@ -135,6 +132,7 @@ const saveMessage = async (message: { role: string; content: string; created_at?
         console.log('Error al guardar mensaje')
     }
 }
+
 const deleteMessages = async (): Promise<void> => {
     const res: Response = await fetch('/api/deleteMessages', {
         method: 'POST',
@@ -143,6 +141,7 @@ const deleteMessages = async (): Promise<void> => {
         })
     });
 }
+
 if (typeof window !== 'undefined') {
     isLoading = true;
     const fetchSession = async (): Promise<void> => {
@@ -170,7 +169,6 @@ if (typeof window !== 'undefined') {
                     };
                     addMessage("Bot", InitialMessage.content, InitialMessage.time);
                     await saveMessage(InitialMessage)
-
                 }
             } else {
                 sessionData = { error: "No hay sesión activa" };
@@ -181,6 +179,7 @@ if (typeof window !== 'undefined') {
     };
     fetchSession();
 }
+
 $form?.addEventListener('submit', async (e: Event) => {
     e.preventDefault();
     const messageText: string = $input.value.trim();
@@ -189,7 +188,6 @@ $form?.addEventListener('submit', async (e: Event) => {
     }
     addMessage("You", messageText, new Date().toLocaleTimeString('es-ES', timeConfig));
     $btn?.setAttribute("disabled", "");
-
     const userMessage: { role: string; content: string; time?: string, userName: string | undefined } = {
         role: "You",
         content: messageText,
@@ -197,9 +195,7 @@ $form?.addEventListener('submit', async (e: Event) => {
         time: new Date().toLocaleTimeString('es-ES', timeConfig),
     };
 
-
     await saveMessage(userMessage)
-
 
     const reply: { response: { text: () => string } } = await chat.sendMessage(messageText);
     addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
@@ -209,6 +205,7 @@ $form?.addEventListener('submit', async (e: Event) => {
         userName: sessionData?.user?.name,
         time: new Date().toLocaleTimeString('es-ES', timeConfig),
     };
+
     await saveMessage(botMessage)
 
     $btn?.removeAttribute('disabled');
@@ -243,7 +240,6 @@ $borrar?.addEventListener('click', () => {
 
 function addMessage(sender: string, message: string, time: string): void {
     const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
-
     const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
     const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
     const $time: HTMLElement | null = clonedTemplate.querySelector("#time");
@@ -268,6 +264,7 @@ function addMessage(sender: string, message: string, time: string): void {
     if ($img) {
         if (sessionData?.user?.image) {
             $img.src = sender === "You" ? sessionData?.user?.image : 'https://flowbite.com/docs/images/people/profile-picture-4.jpg';
+            $img.alt = sender === "You" ? `Avatar de ${sessionData?.user?.name}` : 'Avatar de Amelia';
         }
     }
     if ($messages) {

@@ -17,8 +17,9 @@ const { title } = Astro.props;
     <ul class="flex row-auto justify-between p-2 ">
         <li class="text-2xl font-semibold">{title}</li>
     {sesion ? (
-        <User sesion={sesion}  pathname={pathname} client:load transition:persist/>
-
+        <li>
+            <User sesion={sesion}  pathname={pathname} client:load transition:persist/>
+        </li>
       ) : (
         <li class="flex flex-row gap-4 text-pretty justify-between p-2 items-center ">
           <button
