@@ -13,7 +13,7 @@ const sesion = await getSession(Astro.request);
     <section class="w-full chatSection p-2 md:max-h-full" transition:animate="none" style="overflow-y: auto;">
         {
             sesion ? (
-                <div id="output" class="[grid-area:output] items-center overflow-y-auto h-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth  "  >
+                <div id="output" class="[grid-area:output] items-center overflow-y-auto h-full md:max-h-full max-h-[550px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth  "  >
                     <Modal message='borrar el historial' confirm='borrar'/>
                     <ul id="messages" class="flex flex-col md:max-w-[900px] max-w-[450px] mx-auto max-h-[550px] h-full px-3 gap-4 rounded-xl w-full">
                         <Loader/>
