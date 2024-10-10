@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ request }) => {
   const { data: userId, error: userError } = await supabase
     .from("profiles")
     .select("id")
-    .eq("name", userName);
+    .eq("user_name", userName);
 
   if (userError) {
     console.log(userError);
@@ -22,13 +22,13 @@ export const POST: APIRoute = async ({ request }) => {
 
   const { data, error } = await supabase
     .from("messages")
-    .select("*")
+    .delete()
     .eq("user_id", parsedUserId);
 
   if (error) {
     console.log(error);
     return new Response(JSON.stringify({ error: "No hay mensajes de chat" }), {
-      status: 401,
+      status: 404,
       headers: {
         "Content-Type": "application/json",
       },

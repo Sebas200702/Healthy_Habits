@@ -1,5 +1,6 @@
 import { $ } from "../utils";
 import type { Sesion } from "../types/types";
+import { useState } from "react";
 
 interface UserProps {
   sesion: Sesion;
@@ -11,6 +12,18 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     if (typeof window !== "undefined") {
       const $userDropdown: Element | null = $("#userDropdown");
       $userDropdown?.classList.toggle("hidden");
+    }
+  };
+  const [theme, setTheme] = useState("dark");
+  const handleClickTheme = (): void => {
+    if (typeof window !== "undefined") {
+      if (theme === "dark") {
+        document.documentElement.classList.remove("dark");
+        setTheme("light");
+      } else {
+        document.documentElement.classList.add("dark");
+        setTheme("dark");
+      }
     }
   };
 
@@ -28,7 +41,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
 
       <div
         id="userDropdown"
-        className="z-10 absolute right-0  md:-translate-x-1/2 -translate-x-1/3 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
+        className="z-10 absolute right-0  md:-translate-x-1/2 -translate-x-1/3 hidden dark:bg-gray-950/90 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
       >
         <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div>{sesion?.user?.name}</div>
@@ -42,7 +55,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
             <li>
               <a
                 id="borrar"
-                className="block hover:bg-red-100 hover:text-red-60 px-4 py-2"
+                className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
               >
                 Borrar historial
               </a>
@@ -50,20 +63,18 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
           ) : null}
 
           <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-              Settings
-            </a>
-          </li>
-          <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-              Earnings
+            <a
+              onClick={handleClickTheme}
+              className="block px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
+            >
+              {theme === "dark" ? "Modo claro" : "Modo oscuro"}
             </a>
           </li>
         </ul>
         <div className="py-1">
           <a
             id="signOut"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
           >
             Salir
           </a>

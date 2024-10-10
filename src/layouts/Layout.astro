@@ -17,7 +17,7 @@ const { sesion } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" class="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
@@ -28,7 +28,7 @@ const { sesion } = Astro.props;
         <ViewTransitions fallback="swap"/>
 	</head>
 	<body>
-        <div id="app">
+        <div id="app" class="bg-[#F4F4F9] dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
                 <Header sesion={sesion} pathname={pathname} title={title} />
@@ -46,9 +46,8 @@ const { sesion } = Astro.props;
     @import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
     #app {
         display: grid;
-        background: #F4F4F9;
-        height: 100vh;
-        width: 100vw;
+        height: 100dvh;
+        width: 100dvw;
         grid-template-areas:
             "aside header header"
             "aside main main"
@@ -100,8 +99,6 @@ const $signOut: Element | null = $("#signOut");
 const $modal: Element | null = $("#popup-modal");
 
 const $butonGoogle: Element | null = $("button[value='google']");
-
-
 
 $butonGoogle?.addEventListener("click", (): void => {
     signIn("google", {

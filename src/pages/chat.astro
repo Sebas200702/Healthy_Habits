@@ -4,17 +4,19 @@ import Chatcomponet from '../components/Chat.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
 import type{ Sesion } from '../types/types';
 import Modal from '../components/Modal.astro';
+import Loader from '../components/Loader.astro';
 import { getSession } from "auth-astro/server";
 const sesion = await getSession(Astro.request);
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
-    <section class="w-full h-full  max-h-[600px] chatSection p-2 md:max-h-full" transition:animate="none" >
+    <section class="w-full chatSection p-2 md:max-h-full" transition:animate="none" style="overflow-y: auto;">
         {
             sesion ? (
-                <div id="output" class="[grid-area:output] sm:max-h-full max-h-[600px] md:max-h-full items-center overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth  "  >
+                <div id="output" class="[grid-area:output] items-center overflow-y-auto h-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth  "  >
                     <Modal message='borrar el historial' confirm='borrar'/>
-                    <ul id="messages" class="flex flex-col md:max-w-[900px] md:max-h-full max-w-[400px] gap-4 p-4 mx-auto px-6 rounded-xl w-full ">
+                    <ul id="messages" class="flex flex-col md:max-w-[900px] max-w-[450px] mx-auto max-h-[700px] h-full px-3 gap-4 rounded-xl w-full">
+                        <Loader/>
                     </ul>
                 </div>
                 <div class="[grid-area:input] ">
@@ -23,7 +25,7 @@ const sesion = await getSession(Astro.request);
             ):(
                 <div id="output"  class="[grid-area:output]">
                     <div class="flex flex-col items-center justify-center p-4 h-full w-full">
-                        <h1 class="text-zinc-500 dark:text-zinc-400  mb-8 w-full text-center text-2xl font-semibold">
+                        <h1 class="text-zinc-500 dark:text-zinc-400 mb-8 w-full text-center text-2xl font-semibold">
                             Inicia sesión con Google para comenzar a chatear
                         </h1>
                     </div>
@@ -43,15 +45,14 @@ const sesion = await getSession(Astro.request);
         "input input input";
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows:  3fr 70px;
-        gap: 1rem;
+        gap: .5rem;
         height: 100%;
     }
     .You-message {
         place-self: end;
         flex-direction: row-reverse;
         &> div {
-            background-color: #00b0ff;
-            box-shadow: 0 20px 25px -5px rgba(12, 1, 112, 0.5), 0 10px 10px -5px rgba(54, 6, 143, 0.2);
+            box-shadow: 0 20px 25px -5px rgba(0, 176, 255, 0.4), 0 10px 10px -5px rgba(0, 176, 255, 0.2);
         }
 
     }
@@ -76,7 +77,6 @@ const sesion = await getSession(Astro.request);
 <script>
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { $ } from './../utils';
-
 const apiKey: string = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c';
 const $btn: HTMLElement | null = $("#send");
 const $userDropdown: HTMLElement | null = $("#userDropdown");
@@ -86,44 +86,76 @@ const $output: HTMLElement | null = $("#output");
 const $form: HTMLFormElement | null = $("#form") as HTMLFormElement;
 const $messages: HTMLElement | null = $("#messages");
 const $template: HTMLTemplateElement | null = $("#message-template") as HTMLTemplateElement;
+const $loader: HTMLElement | null = $("#loader");
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+let isLoading = false;
+const timeConfig: Intl.DateTimeFormatOptions = {
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        }
 const chat = model.startChat();
 let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
-let isLoading: boolean = false;
-let messages: Array<{ role: string; content: string; time: string }> = [];
+let messages: Array<{ role: string; content: string; time: string; userName: string|undefined }> = [];
 
-const getMessages = async (): Promise<object> => {
+const getMessages = async (): Promise<{ messages: Array<{ role: string; content: string; time: string ; userName: string }> }> => {
     const res: Response = await fetch('/api/messages', {
         method: 'POST',
         body: JSON.stringify({
             userName: sessionData?.user?.name
         })
     });
-    if (res.ok) return await res.json();
 
-    return { error: 'No hay mensajes de chat' };
-}
-const saveMessages = async (): Promise<void> => {
-    if (messages.length > 0) {
-        const result = await fetch('/api/messages', {
-            method: 'POST',
-            body: JSON.stringify({
-                messages: messages
-            })
-        });
+    if (res.ok) {
+        const data = await res.json();
+
+        // Verifica si el objeto `data` tiene la propiedad `messages` y que sea un array
+        if (data && Array.isArray(data.messages)) {
+            return { messages: data.messages }; // Retorna los mensajes si están presentes y son un array
+        } else {
+            return { messages: [] }; // Si no hay mensajes o no es un array, retorna un array vacío
+        }
+    }
+    return { messages: [] }; // En caso de error en la respuesta, retorna un array vacío
+};
+
+
+const saveMessage = async (message: { role: string; content: string; created_at?: string, userName: string | undefined }): Promise<void> => {
+    const res: Response = await fetch('/api/addMessages', {
+        method: 'POST',
+        body: JSON.stringify({
+            message: message
+        })
+    });
+    if(res.status === 200) {
+        console.log('Mensaje guardado correctamente')
+    } else {
+        console.log('Error al guardar mensaje')
     }
 }
-
+const deleteMessages = async (): Promise<void> => {
+    const res: Response = await fetch('/api/deleteMessages', {
+        method: 'POST',
+        body: JSON.stringify({
+            userName: sessionData?.user?.name
+        })
+    });
+}
 if (typeof window !== 'undefined') {
+    isLoading = true;
     const fetchSession = async (): Promise<void> => {
         try {
             const res: Response = await fetch('/api/session');
             if (res.ok) {
                 sessionData = await res.json();
-                const result = await getMessages();
-                messages = result.data;
-
+                const result:{messages:Array<{role:string,content:string,time:string; userName: string}>}=await getMessages();
+                messages = result.messages;
+                isLoading = false;
+                if(!isLoading){
+                    $loader?.classList.add("hidden");
+                }
                 if (messages.length > 0) {
                     messages.forEach(message => {
                         addMessage(message.role, message.content, message.time);
@@ -133,9 +165,12 @@ if (typeof window !== 'undefined') {
                     const InitialMessage = {
                         role: "Bot",
                         content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
-                        time: new Date().toLocaleTimeString(),
+                        time: new Date().toLocaleTimeString('es-ES', timeConfig),
+                        userName: sessionData?.user?.name,
                     };
                     addMessage("Bot", InitialMessage.content, InitialMessage.time);
+                    await saveMessage(InitialMessage)
+
                 }
             } else {
                 sessionData = { error: "No hay sesión activa" };
@@ -146,34 +181,36 @@ if (typeof window !== 'undefined') {
     };
     fetchSession();
 }
-
-if (isLoading) {
-
-}
-
 $form?.addEventListener('submit', async (e: Event) => {
     e.preventDefault();
     const messageText: string = $input.value.trim();
     if (messageText !== "") {
         $input.value = "";
     }
-    addMessage("You", messageText, new Date().toLocaleTimeString());
+    addMessage("You", messageText, new Date().toLocaleTimeString('es-ES', timeConfig));
     $btn?.setAttribute("disabled", "");
 
-    const userMessage = {
+    const userMessage: { role: string; content: string; time?: string, userName: string | undefined } = {
         role: "You",
         content: messageText,
-        time: new Date().toLocaleTimeString(),
+        userName: sessionData?.user?.name,
+        time: new Date().toLocaleTimeString('es-ES', timeConfig),
     };
-    messages.push(userMessage);
-    const reply = await chat.sendMessage(messageText);
-    addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString());
-    const botMessage = {
+
+
+    await saveMessage(userMessage)
+
+
+    const reply: { response: { text: () => string } } = await chat.sendMessage(messageText);
+    addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
+    const botMessage: { role: string; content: string; time?: string, userName: string | undefined} = {
         role: "Bot",
         content: reply.response.text(),
-        time: new Date().toLocaleTimeString(),
+        userName: sessionData?.user?.name,
+        time: new Date().toLocaleTimeString('es-ES', timeConfig),
     };
-    messages.push(botMessage);
+    await saveMessage(botMessage)
+
     $btn?.removeAttribute('disabled');
     if ($output) {
         $output.scrollTop = $output.scrollHeight;
@@ -186,14 +223,14 @@ $borrar?.addEventListener('click', () => {
         $userDropdown.classList.add("hidden");
     }
     if ($output) {
-        const $modal = $output.querySelector("#popup-modal");
+        const $modal: HTMLElement | null = $output.querySelector("#popup-modal");
         if ($modal) {
             $modal.classList.remove("hidden");
             $modal.querySelector("#close")?.addEventListener("click", () => {
                 $modal.classList.add("hidden");
             });
-            $modal.querySelector("#confirm")?.addEventListener("click", () => {
-                localStorage.removeItem('messages');
+            $modal.querySelector("#confirm")?.addEventListener("click", async() => {
+                await deleteMessages()
                 $modal.classList.add("hidden");
                 window.location.reload();
             });

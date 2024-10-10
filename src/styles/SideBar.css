@@ -26,22 +26,13 @@ nav.close {
     }
   }
 }
-nav ul li {
-  color: var(--textColor);
-  svg {
-    fill: var(--textColor);
-  }
-}
+
 nav ul li a.active {
   color: var(--accentColor);
-  svg {
-    fill: var(--accentColor);
-  }
 }
 
 nav svg {
   flex-shrink: 0;
-  fill: var(--textColor);
 }
 nav a span {
   flex-grow: 1;
