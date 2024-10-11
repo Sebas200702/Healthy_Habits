@@ -1,7 +1,5 @@
 ---
-
 import SideBar from '../components/SideBar.jsx'
-import ViewTransitions from 'astro/components/ViewTransitions.astro';
 import Header from '../components/Header.astro';
 import type { Sesion } from "../types/types";
 import Modal from '../components/Modal.astro';
@@ -25,7 +23,6 @@ const { sesion } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-        <ViewTransitions fallback="swap"/>
 	</head>
 	<body>
         <div id="app" class="bg-[#F4F4F9] dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
