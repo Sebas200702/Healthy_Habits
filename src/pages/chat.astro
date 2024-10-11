@@ -2,10 +2,42 @@
 import Layout from '../layouts/Layout.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
 import ChatComponet from '../components/ChatComponet.astro';
-import type{ Sesion , Message  , Messages } from '../types/types';
+import type { Sesion, Message, Messages } from '../types/types';
 import { getSession } from "auth-astro/server";
+
 const sesion = await getSession(Astro.request);
 const baseUrl = process.env.NODE_ENV === 'production' ? 'https://biologia-taupe.vercel.app' : 'http://localhost:4321';
+const userName: string = sesion?.user?.name ?? "Usuario desconocido";
+const saveDefaultMessage = async (): Promise<void> => {
+    const defaultMessage: Message = {
+        role: "Bot",
+        content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
+        userName,
+        time: new Date().toLocaleTimeString('es-ES',{
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+        } ),
+    };
+
+    const res: Response = await fetch(`${baseUrl}/api/addMessages`, {
+        method: 'POST',
+        body: JSON.stringify({
+            message: defaultMessage
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (res.ok) {
+        console.log('Mensaje predeterminado guardado correctamente');
+    } else {
+        console.error('Error al guardar el mensaje predeterminado');
+    }
+};
+
 const getMessages = async (): Promise<{ messages: Array<Message> }> => {
     const res: Response = await fetch(`${baseUrl}/api/messages`, {
         method: 'POST',
@@ -17,6 +49,7 @@ const getMessages = async (): Promise<{ messages: Array<Message> }> => {
     if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.messages)) {
+            // Retornar los mensajes existentes
             return { messages: data.messages };
         } else {
             return { messages: [] };
@@ -24,8 +57,16 @@ const getMessages = async (): Promise<{ messages: Array<Message> }> => {
     }
     return { messages: [] };
 };
+
 const result = await getMessages();
 
+// Comprobar si no hay mensajes y guardar el mensaje predeterminado
+if (result.messages.length === 0) {
+    await saveDefaultMessage();
+    // Volver a obtener los mensajes después de guardar el predeterminado
+    const updatedResult = await getMessages();
+    result.messages = updatedResult.messages;
+}
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
