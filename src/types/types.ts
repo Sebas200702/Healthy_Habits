@@ -17,7 +17,7 @@ export type Link = {
 export type Message = {
   role: string;
   content: string;
-  time: string;
+  time?: string;
   userName: string | undefined;
 };
 
