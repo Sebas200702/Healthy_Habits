@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Chatcomponet from '../components/Chat.astro';
+import ChatInput from '../components/ChatInput.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
 import type{ Sesion } from '../types/types';
 import Modal from '../components/Modal.astro';
@@ -20,7 +20,7 @@ const sesion = await getSession(Astro.request);
                     </ul>
                 </div>
                 <div class="[grid-area:input] ">
-                    <Chatcomponet />
+                    <ChatInput />
                 </div>
             ):(
                 <div id="output"  class="[grid-area:output]">
