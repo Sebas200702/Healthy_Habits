@@ -2,14 +2,35 @@
 import Layout from '../layouts/Layout.astro';
 import ChatBoubble from '../components/ChatBoubble.astro';
 import ChatComponet from '../components/ChatComponet.astro';
-import type{ Sesion } from '../types/types';
+import type{ Sesion , Message  , Messages } from '../types/types';
 import { getSession } from "auth-astro/server";
 const sesion = await getSession(Astro.request);
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://biologia-taupe.vercel.app' : 'http://localhost:4321';
+const getMessages = async (): Promise<{ messages: Array<Message> }> => {
+    const res: Response = await fetch(`${baseUrl}/api/messages`, {
+        method: 'POST',
+        body: JSON.stringify({
+            userName: sesion?.user?.name
+        })
+    });
+
+    if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.messages)) {
+            return { messages: data.messages };
+        } else {
+            return { messages: [] };
+        }
+    }
+    return { messages: [] };
+};
+const result = await getMessages();
+
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
     <section class="w-full chatSection p-2 md:max-h-full max-h-[580px]" transition:animate="none" style="overflow-y: auto;">
-        <ChatComponet sesion={sesion as Sesion}/>
+        <ChatComponet sesion={sesion as Sesion} messages={result.messages as Messages } />
     </section>
     <template id="message-template">
         <ChatBoubble />
@@ -55,6 +76,7 @@ const sesion = await getSession(Astro.request);
 <script>
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { $ } from './../utils';
+import type { Message } from "../types/types";
 const apiKey: string = 'AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c';
 const $btn: HTMLElement | null = $("#send");
 const $userDropdown: HTMLElement | null = $("#userDropdown");
@@ -64,10 +86,8 @@ const $output: HTMLElement | null = $("#output");
 const $form: HTMLFormElement | null = $("#form") as HTMLFormElement;
 const $messages: HTMLElement | null = $("#messages");
 const $template: HTMLTemplateElement | null = $("#message-template") as HTMLTemplateElement;
-const $loader: HTMLElement | null = $("#loader");
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-let isLoading = false;
 const timeConfig: Intl.DateTimeFormatOptions = {
             month: 'short',
             day: '2-digit',
@@ -76,28 +96,10 @@ const timeConfig: Intl.DateTimeFormatOptions = {
         }
 const chat = model.startChat();
 let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
-let messages: Array<{ role: string; content: string; time: string; userName: string|undefined }> = [];
 
-const getMessages = async (): Promise<{ messages: Array<{ role: string; content: string; time: string ; userName: string }> }> => {
-    const res: Response = await fetch('/api/messages', {
-        method: 'POST',
-        body: JSON.stringify({
-            userName: sessionData?.user?.name
-        })
-    });
 
-    if (res.ok) {
-        const data = await res.json();
-        if (data && Array.isArray(data.messages)) {
-            return { messages: data.messages };
-        } else {
-            return { messages: [] };
-        }
-    }
-    return { messages: [] };
-};
 
-const saveMessage = async (message: { role: string; content: string; created_at?: string, userName: string | undefined }): Promise<void> => {
+const saveMessage = async (message: Message): Promise<void> => {
     const res: Response = await fetch('/api/addMessages', {
         method: 'POST',
         body: JSON.stringify({
@@ -121,33 +123,12 @@ const deleteMessages = async (): Promise<void> => {
 }
 
 if (typeof window !== 'undefined') {
-    isLoading = true;
+
     const fetchSession = async (): Promise<void> => {
         try {
             const res: Response = await fetch('/api/session');
             if (res.ok) {
                 sessionData = await res.json();
-                const result:{messages:Array<{role:string,content:string,time:string; userName: string}>}=await getMessages();
-                messages = result.messages;
-                isLoading = false;
-                if(!isLoading){
-                    $loader?.classList.add("hidden");
-                }
-                if (messages.length > 0) {
-                    messages.forEach(message => {
-                        addMessage(message.role, message.content, message.time);
-                    });
-                }
-                if (messages.length === 0) {
-                    const InitialMessage = {
-                        role: "Bot",
-                        content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
-                        time: new Date().toLocaleTimeString('es-ES', timeConfig),
-                        userName: sessionData?.user?.name,
-                    };
-                    addMessage("Bot", InitialMessage.content, InitialMessage.time);
-                    await saveMessage(InitialMessage)
-                }
             } else {
                 sessionData = { error: "No hay sesión activa" };
             }
@@ -166,7 +147,7 @@ $form?.addEventListener('submit', async (e: Event) => {
     }
     addMessage("You", messageText, new Date().toLocaleTimeString('es-ES', timeConfig));
     $btn?.setAttribute("disabled", "");
-    const userMessage: { role: string; content: string; time?: string, userName: string | undefined } = {
+    const userMessage: Message = {
         role: "You",
         content: messageText,
         userName: sessionData?.user?.name,
@@ -177,7 +158,7 @@ $form?.addEventListener('submit', async (e: Event) => {
 
     const reply: { response: { text: () => string } } = await chat.sendMessage(messageText);
     addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
-    const botMessage: { role: string; content: string; time?: string, userName: string | undefined} = {
+    const botMessage: Message = {
         role: "Bot",
         content: reply.response.text(),
         userName: sessionData?.user?.name,
@@ -190,7 +171,6 @@ $form?.addEventListener('submit', async (e: Event) => {
     if ($output) {
         $output.scrollTop = $output.scrollHeight;
     }
-    localStorage.setItem('messages', JSON.stringify(messages));
 });
 
 $borrar?.addEventListener('click', () => {

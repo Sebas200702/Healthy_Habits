@@ -1,19 +1,25 @@
 ---
 import ChatInput from './ChatInput.astro';
-import type{ Sesion } from '../types/types';
+import type{ Sesion , Message  } from '../types/types';
 import Modal from './Modal.astro';
 import Loader from './Loader.astro';
-interface Props{
+import ChatBoubble from './ChatBoubble.astro';
+interface Props {
     sesion: Sesion;
+    messages: Message[];
 }
-const { sesion } = Astro.props;
+const { sesion, messages } = Astro.props;
 ---
 {
     sesion ? (
         <div id="output" class="[grid-area:output] items-center overflow-y-auto h-full md:max-h-full max-h-[550px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth  "  >
             <Modal message='borrar el historial' confirm='borrar'/>
             <ul id="messages" class="flex flex-col md:max-w-[900px] max-w-[450px] mx-auto max-h-[550px] h-full px-3 gap-4 rounded-xl w-full">
-                <Loader/>
+                {
+                    messages.map(message => {
+                        return <ChatBoubble message={message} img={message.role === 'You' ? sesion?.user?.image : 'https://flowbite.com/docs/images/people/profile-picture-4.jpg'} alt={message.role === 'You' ? sesion?.user?.name : 'Amelia'} sender={message.role} name={message.role === 'You' ? sesion?.user?.name : 'Amelia'}/>
+                    })
+                }
             </ul>
         </div>
         <div class="[grid-area:input] ">

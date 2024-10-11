@@ -20,3 +20,5 @@ export type Message = {
   time: string;
   userName: string | undefined;
 };
+
+export type Messages = Array<Message>;

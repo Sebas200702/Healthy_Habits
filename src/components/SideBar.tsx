@@ -152,7 +152,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
       }
       setTimeout(() => {
         setIsReady(true);
-      }, 500);
+      }, 350);
     }
   }, []);
 

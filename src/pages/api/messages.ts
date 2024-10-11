@@ -22,7 +22,8 @@ export const POST: APIRoute = async ({ request }) => {
   const { data, error } = await supabase
     .from("messages")
     .select("*")
-    .eq("user_id", parsedUserId);
+    .eq("user_id", parsedUserId)
+    .order("time", { ascending: true });
 
   if (error) {
     console.log(error);
