@@ -160,7 +160,7 @@ $form?.addEventListener('submit', async (e: Event) => {
     await saveMessage(userMessage)
 
     const reply: { response: { text: () => string } } = await chat.sendMessage(messageText);
-    addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
+    await addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
     const botMessage: Message = {
         role: "Bot",
         content: reply.response.text(),
