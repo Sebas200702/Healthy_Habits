@@ -1,7 +1,7 @@
 ---
-import GoogleIcon from './icons/GoogleIcon.astro';
 import type { Sesion } from '../types/types';
 import {User} from './User';
+import { SigninBtn } from './SigninBtn';
 interface Props {
     sesion: Sesion;
     pathname: string;
@@ -18,21 +18,11 @@ const { title } = Astro.props;
         <li class="text-2xl font-semibold">{title}</li>
     {sesion ? (
         <li>
-            <User sesion={sesion}  pathname={pathname} client:load transition:persist/>
+            <User sesion={sesion}  pathname={pathname} client:visible transition:persist/>
         </li>
       ) : (
         <li class="flex flex-row gap-4 text-pretty justify-between p-2 items-center ">
-          <button
-            value="google"
-            name="provider"
-            type="submit"
-            class=" signin flex text-pretty flex-row gap-1 p-1 bg-[#ff101f] rounded-md items-center transition-all duration-300 ease-in-out hover:bg-[#ff1068] hover:scale-[1.02] hover:opacity-100"
-          >
-            <GoogleIcon />
-            <span class="font-semibold text-sm text-balance opacity-75">
-              Inicia sesión con Google
-            </span>
-          </button>
+            <SigninBtn client:visible transition:persist/>
         </li>
       )}
       </ul>

@@ -14,3 +14,9 @@ export type Link = {
   icon: any;
   active: boolean;
 };
+export type Message = {
+  role: string;
+  content: string;
+  time: string;
+  userName: string | undefined;
+};

@@ -1,6 +1,7 @@
 import { $ } from "../utils";
 import type { Sesion } from "../types/types";
 import { useState, useEffect } from "react";
+import { signOut } from "auth-astro/client";
 
 interface UserProps {
   sesion: Sesion;
@@ -8,7 +9,6 @@ interface UserProps {
 }
 
 export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
-  // Estado inicial de "theme" basado en localStorage o 'dark' por defecto
   const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") || "dark";
@@ -16,16 +16,66 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     return "dark";
   });
 
-  // Efecto para aplicar el tema al cargar el componente
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-    // Guardar el tema en localStorage
     localStorage.setItem("theme", theme);
   }, [theme]);
+  const deleteMessages = async (): Promise<void> => {
+    const res: Response = await fetch("/api/deleteMessages", {
+      method: "POST",
+      body: JSON.stringify({
+        userName: sesion?.user?.name,
+      }),
+    });
+  };
+  const handleClickSignOut = (): void => {
+    if (typeof window !== "undefined") {
+      const $modal: Element | null = $("#popup-modal");
+      $modal?.classList.remove("hidden");
+      $modal?.querySelector("#close")?.addEventListener("click", () => {
+        $modal?.classList.add("hidden");
+      });
+      $modal?.querySelector("#confirm")?.addEventListener("click", () => {
+        signOut();
+        $modal?.classList.add("hidden");
+      });
+      $modal?.querySelector("#cancel")?.addEventListener("click", () => {
+        $modal?.classList.add("hidden");
+      });
+    }
+  };
+
+  const handleClickDelete = (): void => {
+    if (typeof window !== "undefined") {
+      const $output: HTMLElement | null = $("#output");
+      const $userDropdown: HTMLElement | null = $("#userDropdown");
+      if ($userDropdown) {
+        $userDropdown.classList.add("hidden");
+      }
+      if ($output) {
+        const $modal: HTMLElement | null =
+          $output.querySelector("#popup-modal");
+        $modal?.classList.remove("hidden");
+        $modal?.querySelector("#close")?.addEventListener("click", () => {
+          $modal?.classList.add("hidden");
+        });
+        $modal
+          ?.querySelector("#confirm")
+          ?.addEventListener("click", async () => {
+            await deleteMessages();
+            $modal?.classList.add("hidden");
+            window.location.reload();
+          });
+        $modal?.querySelector("#cancel")?.addEventListener("click", () => {
+          $modal?.classList.add("hidden");
+        });
+      }
+    }
+  };
 
   const handleClickUser = (): void => {
     if (typeof window !== "undefined") {
@@ -71,6 +121,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
               <a
                 id="borrar"
                 className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
+                onClick={handleClickDelete}
               >
                 Borrar historial
               </a>
@@ -90,6 +141,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
           <a
             id="signOut"
             className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
+            onClick={handleClickSignOut}
           >
             Salir
           </a>
