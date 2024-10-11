@@ -13,12 +13,12 @@ const saveDefaultMessage = async (): Promise<void> => {
         role: "Bot",
         content: "Hola, soy Amelia, una inteligente asistente virtual que te ayudará a obtener información sobre la salud y bienestar y a tomar decisiones informadas para mejorar tu vida.",
         userName,
-        time: new Date().toLocaleTimeString('es-ES',{
+        time: new Date().toLocaleTimeString('es-ES', {
             month: 'short',
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
-        } ),
+        }),
     };
 
     const res: Response = await fetch(`${baseUrl}/api/addMessages`, {
