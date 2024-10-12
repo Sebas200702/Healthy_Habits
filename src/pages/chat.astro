@@ -169,8 +169,9 @@ $form?.addEventListener('submit', async (e: Event) => {
         const [choice] = item.candidates;
         const content = choice.content.parts[0].text ?? "";
         reply += content;
-        $botmessage.textContent = reply;
-  }
+        if ($botmessage) {
+            $botmessage.textContent = reply;
+        }  }
   const botMessage: Message = {
             role: "Bot",
             content: reply,
