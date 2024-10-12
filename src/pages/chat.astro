@@ -207,7 +207,7 @@ $borrar?.addEventListener('click', () => {
     }
 });
 
-function addMessage(sender: string, message: string, time: string): HTMLElement {
+function addMessage(sender: string, message: string, time: string): HTMLElement | null {
     const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
     const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
     const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
