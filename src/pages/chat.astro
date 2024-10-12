@@ -158,25 +158,7 @@ $form?.addEventListener('submit', async (e: Event) => {
     };
 
     await saveMessage(userMessage)
-    const chunks = await chat.sendMessageStream(messageText);
-    let reply: string = "";
-    const $botmessage = addMessage("Bot", "", new Date().toLocaleTimeString('es-ES', timeConfig));
-    console.log(chunks);
-    for await (const item of chunks.stream) {
-        if (!item.candidates) {
-            continue;
-        }
-        const [choice] = item.candidates;
-        const content = choice.content.parts[0].text ?? "";
-        reply += content;
-        $botmessage.textContent = reply;
-  }
-  const botMessage: Message = {
-            role: "Bot",
-            content: reply,
-            userName: sessionData?.user?.name,
-            time: new Date().toLocaleTimeString('es-ES', timeConfig),
-        };
+
     await saveMessage(botMessage)
     $btn?.removeAttribute('disabled');
     if ($output) {
