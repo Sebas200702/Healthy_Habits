@@ -158,18 +158,26 @@ $form?.addEventListener('submit', async (e: Event) => {
     };
 
     await saveMessage(userMessage)
-
-    const reply: { response: { text: () => string } } = await chat.sendMessage(messageText);
-    addMessage("Bot", reply.response.text(), new Date().toLocaleTimeString('es-ES', timeConfig));
-    const botMessage: Message = {
-        role: "Bot",
-        content: reply.response.text(),
-        userName: sessionData?.user?.name,
-        time: new Date().toLocaleTimeString('es-ES', timeConfig),
-    };
-
+    const chunks = await chat.sendMessageStream(messageText);
+    let reply: string = "";
+    const $botmessage = addMessage("Bot", "", new Date().toLocaleTimeString('es-ES', timeConfig));
+    console.log(chunks);
+    for await (const item of chunks.stream) {
+        if (!item.candidates) {
+            continue;
+        }
+        const [choice] = item.candidates;
+        const content = choice.content.parts[0].text ?? "";
+        reply += content;
+        $botmessage.textContent = reply;
+  }
+  const botMessage: Message = {
+            role: "Bot",
+            content: reply,
+            userName: sessionData?.user?.name,
+            time: new Date().toLocaleTimeString('es-ES', timeConfig),
+        };
     await saveMessage(botMessage)
-
     $btn?.removeAttribute('disabled');
     if ($output) {
         $output.scrollTop = $output.scrollHeight;
@@ -199,7 +207,7 @@ $borrar?.addEventListener('click', () => {
     }
 });
 
-function addMessage(sender: string, message: string, time: string): void {
+function addMessage(sender: string, message: string, time: string): HTMLElement {
     const clonedTemplate: DocumentFragment = $template?.content?.cloneNode(true) as DocumentFragment;
     const $messageContainer: HTMLElement | null = clonedTemplate.querySelector("#message-container");
     const $who: HTMLElement | null = clonedTemplate.querySelector("#sender-name");
@@ -231,5 +239,6 @@ function addMessage(sender: string, message: string, time: string): void {
     if ($messages) {
         $messages.appendChild($messageContainer as HTMLElement);
     }
+    return $text;
 }
 </script>
