@@ -100,8 +100,6 @@ const timeConfig: Intl.DateTimeFormatOptions = {
 const chat = model.startChat();
 let sessionData: { user?: { name: string; image: string }; error?: string } | null = null;
 
-
-
 const saveMessage = async (message: Message): Promise<void> => {
     const res: Response = await fetch('/api/addMessages', {
         method: 'POST',
@@ -126,7 +124,6 @@ const deleteMessages = async (): Promise<void> => {
 }
 
 if (typeof window !== 'undefined') {
-
     const fetchSession = async (): Promise<void> => {
         try {
             const res: Response = await fetch('/api/session');
@@ -173,12 +170,12 @@ $form?.addEventListener('submit', async (e: Event) => {
         if ($botmessage) {
             $botmessage.textContent = reply;
         }  }
-  const botMessage: Message = {
+    const botMessage: Message = {
             role: "Bot",
             content: reply,
             userName: sessionData?.user?.name,
             time: new Date().toLocaleTimeString('es-ES', timeConfig),
-        };
+    };
     await saveMessage(botMessage)
     $btn?.removeAttribute('disabled');
     if ($output) {
