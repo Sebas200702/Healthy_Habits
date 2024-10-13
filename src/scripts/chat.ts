@@ -3,13 +3,10 @@ import { $ } from "./../utils";
 import type { Message } from "../types/types";
 const apiKey: string = "AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c";
 const $btn: HTMLElement | null = $("#send");
-const $userDropdown: HTMLElement | null = $("#userDropdown");
-const $borrar: HTMLElement | null = $("#borrar");
 const $input: HTMLInputElement | null = $("#chat") as HTMLInputElement;
 const $output: HTMLElement | null = $("#output");
 const $form: HTMLFormElement | null = $("#form") as HTMLFormElement;
 const $messages: HTMLElement | null = $("#messages");
-const $copyBtn: HTMLElement | null = $("#copy");
 const $template: HTMLTemplateElement | null = $(
   "#message-template"
 ) as HTMLTemplateElement;
@@ -113,12 +110,6 @@ $form?.addEventListener("submit", async (e: Event) => {
     $output.scrollTop = $output.scrollHeight;
   }
 });
-$copyBtn?.addEventListener("click", () => {
-  const messages = $copyBtn.parentNode?.querySelector("#message");
-  if (messages?.textContent) {
-    navigator.clipboard.writeText(messages.textContent);
-  }
-});
 
 function addMessage(
   sender: string,
@@ -144,35 +135,35 @@ function addMessage(
       sender !== "You"
         ? $copy.classList.remove("hidden")
         : $copy.classList.add("hidden");
-    }
 
-    if ($who) {
-      if (sessionData?.user?.name) {
-        $who.textContent =
-          sender === "You" ? sessionData?.user?.name : "Amelia";
+      if ($who) {
+        if (sessionData?.user?.name) {
+          $who.textContent =
+            sender === "You" ? sessionData?.user?.name : "Amelia";
+        }
       }
-    }
-    if ($text) {
-      $text.textContent = message;
-    }
-    if ($time) {
-      $time.textContent = time;
-    }
-    if ($img) {
-      if (sessionData?.user?.image) {
-        $img.src =
-          sender === "You"
-            ? sessionData?.user?.image
-            : "https://flowbite.com/docs/images/people/profile-picture-4.jpg";
-        $img.alt =
-          sender === "You"
-            ? `Avatar de ${sessionData?.user?.name}`
-            : "Avatar de Amelia";
+      if ($text) {
+        $text.textContent = message;
       }
+      if ($time) {
+        $time.textContent = time;
+      }
+      if ($img) {
+        if (sessionData?.user?.image) {
+          $img.src =
+            sender === "You"
+              ? sessionData?.user?.image
+              : "https://flowbite.com/docs/images/people/profile-picture-4.jpg";
+          $img.alt =
+            sender === "You"
+              ? `Avatar de ${sessionData?.user?.name}`
+              : "Avatar de Amelia";
+        }
+      }
+      if ($messages) {
+        $messages.appendChild($messageContainer);
+      }
+      return $text;
     }
-    if ($messages) {
-      $messages.appendChild($messageContainer);
-    }
-    return $text;
   }
 }

@@ -1,6 +1,6 @@
 ---
 import type { Message } from '../types/types';
-import Copy from './icons/copy.astro';
+import {CopyBtn} from './CopyBtn.tsx';
 interface Props{
     message?: Message;
     img? : string;
@@ -13,15 +13,12 @@ const { message , img , alt , sender , name} = Astro.props;
 ---
 <li id="message-container" class={`relative meassage-container ${sender}-message flex items-start justify-end w-full md:max-w-[320px] max-w-[250px] rounded-e-xl rounded-es-xl gap-4 `}>
     <img id="sender-img" class="sender-img w-8 h-8 rounded-full" src={img} alt=`Avatar de ${alt}`>
-    <div class="flex flex-col w-full md:max-w-[500px] max-w-[250px] leading-1.5 p-4 md:p-5 border-gray-200 bg-gray-100 dark:bg-gray-900/95  rounded-xl  shadow-xl shadow-red-600/50 ">
+    <div class="flex flex-col w-full md:max-w-[500px] max-w-[250px] leading-1.5 p-4  border-gray-200 bg-gray-100 dark:bg-gray-900/95  rounded-xl  shadow-xl shadow-red-600/50 ">
        <div class="flex items-center space-x-2   ">
           <span id="sender-name" class="sender-name text-xs max-w-[100px] font-medium text-gray-900 truncate dark:text-white">{name}</span>
           <span id="time" class="time text-xs font-normal text-gray-800 dark:text-white/70  ">{message?.time}</span>
        </div>
        <p id="message" class="message text-xs font-normal text-gray-900 dark:text-gray-100/90">{message?.content}</p>
     </div>
-
-    <button id="copy" title="Copiar" class={` m-auto copy-btn ${message?.role === 'Bot' ? 'flex' : 'hidden'}  absolute transform translate-x-8 -translate-y-2 right-0 bottom-0 dark:text-white/70
-        hover:dark:text-white  transition-all ease-in-out duration-300`}><Copy /></button>
-
+    <CopyBtn message={message} client:load transition:persist />
 </li>
