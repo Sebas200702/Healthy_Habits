@@ -9,7 +9,6 @@ export const POST: APIRoute = async ({ request }) => {
     .select("id")
     .eq("user_name", userName);
   if (userError) {
-    console.log(userError);
     return new Response(JSON.stringify({ error: "No hay sesión activa" }), {
       status: 401,
       headers: {

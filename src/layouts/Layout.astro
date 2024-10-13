@@ -18,11 +18,12 @@ const { sesion } = Astro.props;
 <html lang="es" class="dark" role="main">
 	<head>
 		<meta charset="UTF-8" />
+		<title>{title}</title>
 		<meta name="description" content="Astro description" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+        <script src="../scripts/chat.ts"></script>
 	</head>
 	<body>
         <div id="app" class="bg-[#F4F4F9] dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
@@ -40,51 +41,79 @@ const { sesion } = Astro.props;
 	</body>
 </html>
 <style is:global>
-    @import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
     #app {
+  display: grid;
+  height: 100dvh;
+  width: 100dvw;
+  grid-template-areas:
+    "aside header header"
+    "aside main main"
+    "aside main main";
+  grid-template-rows: 0.3fr 5fr auto;
+  grid-template-columns: auto 5fr;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-overflow-scrolling: touch;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@media screen and (max-width: 768px) {
+  #app {
+    display: grid;
+    grid-template-areas:
+      "header header"
+      "main main"
+      "aside aside";
+    grid-template-rows: 0.3fr 5fr;
+    grid-template-columns: auto 5fr;
+    height: 100dvh;
+    width: 100dvw;
+  }
+}
+.chatSection {
         display: grid;
-        height: 100dvh;
-        width: 100dvw;
         grid-template-areas:
-            "aside header header"
-            "aside main main"
-            "aside main main"
-            ;
-        grid-template-rows: .3fr 5fr auto;
-        grid-template-columns: auto 5fr;
-        font-family: "SUSE", sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.5;
-        text-align: left;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-text-size-adjust: 100%;
-        -moz-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-overflow-scrolling: touch;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
+        "output output output"
+        "input input input";
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows:  3fr 70px;
+        gap: .5rem;
+        height: 100%;
     }
-    @media screen and (max-width: 768px) {
-        #app {
-            display: grid;
-            grid-template-areas:
-                "header header"
-                "main main"
-                "aside aside"
-                ;
-            grid-template-rows: .3fr 5fr;
-            grid-template-columns: auto 5fr;
-            height: 100dvh;
-            width: 100dvw;
+    .You-message {
+        place-self: end;
+        flex-direction: row-reverse;
+        &> div {
+            box-shadow: 0 20px 25px -5px rgba(0, 176, 255, 0.4), 0 10px 10px -5px rgba(0, 176, 255, 0.2);
         }
-
+         button {
+           position: absolute;
+           left: 2;
+           bottom: 2;
+        }
     }
+    .Bot-message> div {
+        background-color: #e0e0e0;
+    }
+
+    #send[disabled] {
+        opacity: 0.5;
+        pointer-events: none;
+        color: gray;
+    }
+
 </style>

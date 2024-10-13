@@ -25,7 +25,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     localStorage.setItem("theme", theme);
   }, [theme]);
   const deleteMessages = async (): Promise<void> => {
-    const res: Response = await fetch("/api/deleteMessages", {
+    await fetch("/api/deleteMessages", {
       method: "POST",
       body: JSON.stringify({
         userName: sesion?.user?.name,
