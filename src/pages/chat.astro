@@ -145,9 +145,10 @@ if (typeof window !== 'undefined') {
 $form?.addEventListener('submit', async (e: Event) => {
     e.preventDefault();
     const messageText: string = $input.value.trim();
-    if (messageText !== "") {
-        $input.value = "";
+    if (messageText === "") {
+        return;
     }
+    $input.value = "";
     addMessage("You", messageText, new Date().toLocaleTimeString('es-ES', timeConfig));
     $btn?.setAttribute("disabled", "");
     const userMessage: Message = {
