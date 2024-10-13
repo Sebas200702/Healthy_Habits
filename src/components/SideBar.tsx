@@ -135,11 +135,11 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
       : pathname;
   const pages = [
     { title: "Inicio", href: "/", icon: HomeIcon },
-    { title: "Acerca de", href: "#about", icon: AboutIcon },
+    { title: "Acerca de", href: "/#about", icon: AboutIcon },
     { title: "Amelia Bot", href: "/chat", icon: ChatIcon },
-    { title: "Contacto", href: "#contact", icon: ContactIcon },
-    { title: "Proyectos", href: "#projects", icon: ProjectsIcon },
-    { title: "Resumen", href: "#resume", icon: ResumeIcon },
+    { title: "Contacto", href: "/#contact", icon: ContactIcon },
+    { title: "Proyectos", href: "/#projects", icon: ProjectsIcon },
+    { title: "Resumen", href: "/#resume", icon: ResumeIcon },
   ].map((page) => ({ ...page, active: normalizePathName === page.href }));
   const [isReady, setIsReady] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
