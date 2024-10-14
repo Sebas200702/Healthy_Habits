@@ -7,21 +7,23 @@ import Modal from '../components/Modal.astro';
 interface Props {
 	title: string;
     pathname: string;
-    sesion: Sesion;
+    sesion?: Sesion;
 }
 const { title } = Astro.props;
 const { pathname } = Astro.url;
 const { sesion } = Astro.props;
+const SEOTitle = ` - ${title} - Promoción de la salud en medios digitales`;
+const description = "Plataforma encaminada a la promoción de la salud por medios digitales en la Institución Educativa Tecnico Industrial El Milagroso";
 ---
 
 <!doctype html>
 <html lang="es" class="dark" role="main">
 	<head>
 		<meta charset="UTF-8" />
-		<title>{title}</title>
-		<meta name="description" content="Astro description" />
+		<title>{SEOTitle}</title>
+		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
 		<meta name="generator" content={Astro.generator} />
         <script src="../scripts/chat.ts"></script>
 	</head>
