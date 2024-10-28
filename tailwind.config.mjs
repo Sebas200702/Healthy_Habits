@@ -5,6 +5,7 @@ export default {
   theme: {
     colors: {
       blue: "#3F72AF",
+      background: "#F4F4F9",
     },
   },
   plugins: [],

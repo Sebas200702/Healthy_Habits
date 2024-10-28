@@ -16,7 +16,6 @@ const getMessages = async (): Promise<{ messages: Array<Message> }> => {
             userName: sesion?.user?.name
         })
     });
-
     if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.messages)) {
