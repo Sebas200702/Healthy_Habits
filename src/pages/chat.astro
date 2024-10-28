@@ -6,7 +6,7 @@ import type { Sesion, Message, Messages } from '../types/types';
 import { getSession } from "auth-astro/server";
 
 const sesion = await getSession(Astro.request);
-const baseUrl = process.env.NODE_ENV === 'production' ? 'https://biologia-taupe.vercel.app' : 'http://localhost:4321';
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://healthyhabits.vercel.app' : 'http://localhost:4321';
 const userName: string = sesion?.user?.name ?? "Usuario desconocido";
 
 const getMessages = async (): Promise<{ messages: Array<Message> }> => {
