@@ -2,12 +2,11 @@
   --sideBarColor: #f4f4f9;
   --hoverColor: #dcdcf5;
   --textColor: #000000;
-  --accentColor: #ff101f;
-  --secundaryAccentColor: #ff1038;
+  --accentColor: #3f72af;
 }
 
 nav {
-  transition: width 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 nav.close {

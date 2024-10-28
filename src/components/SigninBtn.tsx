@@ -31,7 +31,8 @@ export const SigninBtn = () => {
       onClick={handleSignIn}
       name="provider"
       type="submit"
-      className=" signin flex text-pretty flex-row gap-1 p-1 bg-[#ff101f] rounded-md items-center transition-all duration-300 ease-in-out hover:bg-[#ff1068] hover:scale-[1.02] hover:opacity-100"
+      className=" signin flex text-pretty flex-row gap-1 px-4 py-2 bg-blue rounded-3xl items-center transition-all duration-300 ease-in-out  hover:scale-[1.06]
+       hover:opacity-100"
     >
       <GoogleIcon />
       <span className="font-semibold text-sm text-balance opacity-75">

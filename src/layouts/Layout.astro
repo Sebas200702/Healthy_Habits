@@ -13,7 +13,7 @@ const { title } = Astro.props;
 const { pathname } = Astro.url;
 const { sesion } = Astro.props;
 const SEOTitle = ` - ${title} - Promoción de la salud en medios digitales`;
-const description = "Plataforma encaminada a la promoción de la salud por medios digitales en la Institución Educativa Tecnico Industrial El Milagroso";
+const description = "";
 ---
 
 <!doctype html>
@@ -23,15 +23,15 @@ const description = "Plataforma encaminada a la promoción de la salud por medio
 		<title>{SEOTitle}</title>
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
-
+        <link rel="icon" type="image/svg+xml" href="/favicon.webp" />
 		<meta name="generator" content={Astro.generator} />
         <script src="../scripts/chat.ts"></script>
 	</head>
 	<body>
-        <div id="app" class="bg-[#F4F4F9] dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
+        <div id="app" class="bg-background dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
-                <Header sesion={sesion} pathname={pathname} title={title} />
+                <Header sesion={sesion as Sesion} pathname={pathname} title={title} />
             </header>
             <aside class="[grid-area:aside] ">
                 <SideBar client:load pathname={pathname} transition:persist/>

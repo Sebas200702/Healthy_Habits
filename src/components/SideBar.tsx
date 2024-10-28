@@ -172,14 +172,20 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
 
   return (
     <nav
-      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] dark:text-white dark:[box-shadow:rgba(255,0,0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
+      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${
+        isOpen ? "" : "close"
+      } [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] dark:text-white dark:[box-shadow:rgba(255,0,0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
       <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black  justify-center md:justify-start ">
         <li className="flex flex-row md:gap-4 gap-2 ">
-          <span className=" flex md:p-3 p-2 logo rounded-lg ">Logo</span>
+          <span className=" flex md:p-3 p-2 logo rounded-lg flex-col items-center justify-center font-mono text-xl">
+            Healthy <strong className="text-[#3f72af] font-bold">Habits</strong>
+          </span>
           <button
             id="toggleBtn"
-            className={`${isOpen ? "" : "rotate"} md:ml-auto p-3 hidden md:flex cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
+            className={`${
+              isOpen ? "" : "rotate"
+            } md:ml-auto p-3 hidden md:flex cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
             onClick={toggle}
           >
             <ArrowIcon />
