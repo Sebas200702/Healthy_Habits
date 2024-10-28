@@ -17,7 +17,7 @@ const description = "";
 ---
 
 <!doctype html>
-<html lang="es" class="dark" role="main">
+<html lang="es" class="dark" >
 	<head>
 		<meta charset="UTF-8" />
 		<title>{SEOTitle}</title>
@@ -28,7 +28,7 @@ const description = "";
         <script src="../scripts/chat.ts"></script>
 	</head>
 	<body>
-        <div id="app" class="bg-background dark:bg-gray-950 dark:text-white text-black transition-all ease-in-out duration-300">
+        <div id="app" class="bg-[#f4f4f9] dark:bg dark:text-white text-black dark:bg-slate-950 transition-all ease-in-out duration-300">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
                 <Header sesion={sesion as Sesion} pathname={pathname} title={title} />
