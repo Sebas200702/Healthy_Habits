@@ -174,11 +174,11 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
     <nav
       className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${
         isOpen ? "" : "close"
-      } [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] dark:text-white dark:[box-shadow:#3f72af_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
+      } [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] dark:text-white dark:[box-shadow:#3f72af_0px_5px_15px] transition-all duration-300 ease-in-out fixed md:top-0 z-50 rounded-md`}
     >
-      <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black  justify-center md:justify-start ">
+      <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black  justify-center  md:justify-start ">
         <li className="flex flex-row md:gap-4 gap-2 ">
-          <span className=" flex md:p-3 p-2 logo rounded-lg flex-col items-center justify-center font-mono text-xl">
+          <span className=" flex md:p-3 p-2 logo rounded-lg flex-col items-center justify-center font-mono text-xs md:text-xl">
             Healthy <strong className="text-[#3f72af] font-bold">Habits</strong>
           </span>
           <button

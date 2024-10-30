@@ -12,23 +12,23 @@ interface Props {
 const { title } = Astro.props;
 const { pathname } = Astro.url;
 const { sesion } = Astro.props;
-const SEOTitle = ` - ${title} - Promoción de la salud en medios digitales`;
-const description = "";
+const SEOTitle = ` Healthy Habits - Promoción de la salud en medios digitales`;
+const description = "Una plataforma que te ayuda a crear y mantener hábitos saludables en tu vida";
 ---
 
 <!doctype html>
-<html lang="es" class="dark" >
+<html lang="es"  >
 	<head>
 		<meta charset="UTF-8" />
 		<title>{SEOTitle}</title>
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.webp" />
+        <link rel="icon"  href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
         <script src="../scripts/chat.ts"></script>
 	</head>
 	<body>
-        <div id="app" class="bg-[#f4f4f9] dark:bg dark:text-white text-black dark:bg-slate-950 transition-all ease-in-out duration-300">
+        <div id="app" class="bg-[#f4f4f9] overflow-auto dark:bg dark:text-white text-black dark:bg-[#0a0a0a] transition-all ease-in-out duration-300">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
                 <Header sesion={sesion as Sesion} pathname={pathname} title={title} />

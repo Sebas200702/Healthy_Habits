@@ -13,7 +13,8 @@ nav.close {
   padding: 5px;
   width: 60px;
   overflow: hidden;
-  & > ul > li span {
+  & > ul > a span,
+  li > span {
     display: none;
   }
 }
@@ -26,7 +27,7 @@ nav.close {
   }
 }
 
-nav ul li a.active {
+nav ul a.active {
   color: var(--accentColor);
 }
 

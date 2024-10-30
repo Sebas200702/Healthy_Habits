@@ -13,8 +13,8 @@ const { title } = Astro.props;
 ---
 
 <section class=" p-2 relative">
-    <ul class="flex row-auto justify-between p-2 ">
-        <li class="text-2xl font-semibold">{title}</li>
+    <ul class="flex flex-row-reverse  p-2 ">
+
     {sesion ? (
         <li>
             <User sesion={sesion}  pathname={pathname} client:visible transition:persist/>
