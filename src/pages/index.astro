@@ -11,11 +11,10 @@ const sesion = await getSession(Astro.request);
 
 <Layout title={title} pathname={Astro.url.pathname} sesion={sesion as Sesion}>
         <section class="w-full h-full  md:max-h-full flex  flex-col items-center">
+            <h1 class="md:text-7xl text-5xl mt-28 text-pretty z-10  text-[#3f72af] text-center  drop-shadow-2xl">Transforma tu Bienestar</h1>
 
-    <h1 class="md:text-7xl text-5xl mt-28 text-pretty z-10 max-w-96 mx-auto text-[#3f72af] text-center  drop-shadow-2xl">Transforma tu Bienestar</h1>
-
-    <p class="text-center text-xl mt-4">Descubre, aprende y crea hábitos que mejorarán tu vida
-    </p>
+            <p class="text-center text-xl mt-4">Descubre, aprende y crea hábitos que mejorarán tu vida
+            </p>
         </section>
 </Layout>
 <style>
