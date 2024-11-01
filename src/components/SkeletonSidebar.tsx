@@ -6,7 +6,7 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
       className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
       <ul className="flex gap-2 md:gap-4 md:flex-col flex-row  items-center  md:items-start justify-center md:justify-start ">
-        <li className="flex flex-row gap-2 md:gap-4 h-12 items-center">
+        <li className="flex flex-row gap-2 md:gap-4 h-12 mb-6 items-center">
           {isOpen && (
             <div className="skeleton-logo  flex md:p-3 p-2 logo rounded-lg"></div>
           )}
@@ -17,13 +17,8 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
         {[...Array(6)].map((_, index) => (
           <div
             key={index}
-            className="skeleton-item flex md:w-40 h-12 p-2 gap-3 md:p-3 flex-row  md:gap-3 items-center"
-          >
-            <div>
-              <div className="skeleton-icon w-12 h-12 rounded-lg"></div>
-            </div>
-            {isOpen && <div className="skeleton-text hidden md:flex"></div>}
-          </div>
+            className="skeleton-item flex md:w-40 h-12 p-2 gap-2 md:p-3 flex-row  md:gap-3 items-center"
+          ></div>
         ))}
       </ul>
       <style>{`
@@ -46,10 +41,12 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
         .skeleton-sidebar.closed {
           width: 60px;
         }
-        .skeleton-content {
+        .skeleton-item {
           display: flex;
-          flex-direction: column;
-          gap: 24px;
+          width: 100%;
+          height: 48px;
+          background-color: #e2e8f0;
+          border-radius: 4px;
         }
         .skeleton-header {
           display: flex;
@@ -63,17 +60,14 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
           background-color: #e2e8f0;
         }
         .skeleton-logo {
-          width: 48px;
+          width: 80px;
           height: 36px;
+          margin: 12px;
           background-color: #e2e8f0;
         }
-        .skeleton-icon {
-            width: 24px;
-            height: 24px;
-            background-color: #e2e8f0;
-        }
+
         .skeleton-text {
-          width: 108px;
+          width: 90px;
           height: 24px;
           background-color: #e2e8f0;
         }
@@ -94,8 +88,8 @@ export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
             opacity: 1;
           }
         }
-        .skeleton-icon,
-        .skeleton-text {
+        .skeleton-item,
+        .skeleton.logo {
           animation: pulse 2s ease-in-out infinite;
         }
 

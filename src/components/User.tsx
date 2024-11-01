@@ -10,14 +10,18 @@ interface UserProps {
 }
 
 export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "dark";
-    }
-    return "dark";
-  });
+  const [theme, setTheme] = useState("dark"); // Valor por defecto
 
   useEffect(() => {
+    // Al cargar el componente, recupera el tema del localStorage en el cliente
+    if (typeof window !== "undefined") {
+      const storedTheme = localStorage.getItem("theme") || "dark";
+      setTheme(storedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Cambia las clases de tema cuando el estado cambie
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -25,6 +29,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
   const deleteMessages = async (): Promise<void> => {
     await fetch("/api/deleteMessages", {
       method: "POST",
@@ -33,6 +38,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
       }),
     });
   };
+
   const handleClickSignOut = (): void => {
     if (typeof window !== "undefined") {
       const $modal: Element | null = $("#popup-modal");
@@ -87,16 +93,11 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
           $userDropdown.classList.add("hidden");
         });
       }
-      
     }
   };
 
   const handleClickTheme = (): void => {
-    if (theme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
   return (
@@ -105,54 +106,54 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
         id="avatarButton"
         data-dropdown-toggle="userDropdown"
         data-dropdown-placement="bottom-start"
-        className="w-10 h-10 rounded-full cursor-pointer "
+        className="w-9 h-9 rounded-full cursor-pointer "
         src={sesion?.user?.image}
         onClick={handleClickUser}
         alt={`Avatar of ${sesion?.user?.name}`}
       />
-<div id="userDropdown"  className="h-screen w-screen hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center backdrop-blur-sm">
       <div
-        className=" absolute right-0  md:-translate-x-1/2 -translate-x-1/3  dark:bg-gray-950/90 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
+        id="userDropdown"
+        className="h-screen w-screen hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center backdrop-blur-sm"
       >
-        <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-          <div>{sesion?.user?.name}</div>
-          <div className="font-medium truncate">{sesion?.user?.email}</div>
-        </div>
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="avatarButton"
-        >
-          {pathname === "/chat" ? (
+        <div className="absolute right-0 md:-translate-x-1/2 -translate-x-1/3 dark:bg-gray-950/90 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+          <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+            <div>{sesion?.user?.name}</div>
+            <div className="font-medium truncate">{sesion?.user?.email}</div>
+          </div>
+          <ul
+            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+            aria-labelledby="avatarButton"
+          >
+            {pathname === "/chat" ? (
+              <li>
+                <a
+                  id="borrar"
+                  className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
+                  onClick={handleClickDelete}
+                >
+                  Borrar historial
+                </a>
+              </li>
+            ) : null}
             <li>
               <a
-                id="borrar"
-                className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
-                onClick={handleClickDelete}
+                onClick={handleClickTheme}
+                className="block px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
               >
-                Borrar historial
+                {theme === "dark" ? "Modo claro" : "Modo oscuro"}
               </a>
             </li>
-          ) : null}
-
-          <li>
+          </ul>
+          <div className="py-1">
             <a
-              onClick={handleClickTheme}
-              className="block px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"
+              id="signOut"
+              className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
+              onClick={handleClickSignOut}
             >
-              {theme === "dark" ? "Modo claro" : "Modo oscuro"}
+              Salir
             </a>
-          </li>
-        </ul>
-        <div className="py-1">
-          <a
-            id="signOut"
-            className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
-            onClick={handleClickSignOut}
-          >
-            Salir
-          </a>
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

@@ -1,36 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import type { ChartData } from "chart.js/auto";
 
-const ChartComponent = ({ data }: { data: ChartData }) => {
-  const [mode, setMode] = useState("Modo claro");
+const ChartComponent = ({ data, id }: { data: ChartData; id: string }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [chartInstance, setChartInstance] = useState<Chart | null>(null);
+
+  const Colors = ["#3f72af", "#66b3ff", "#c7e9fb", "#a8d0e6"];
 
   useEffect(() => {
-    const storedMode = localStorage.getItem("mode");
-    if (storedMode) {
-      setMode(storedMode);
-    }
-  }, []);
-  const title = data?.datasets[0]?.label;
-  useEffect(() => {
-    const ctx = document.querySelector("canvas")?.getContext("2d");
-    if (ctx) {
-      new Chart(ctx, {
+    const canvas = document.getElementById(id) as HTMLCanvasElement | null;
+    if (canvas) {
+      const chart = new Chart(canvas, {
         type: "doughnut",
-        data,
+        data: {
+          ...data,
+          datasets: [
+            {
+              ...data.datasets[0],
+              backgroundColor: Colors,
+              borderColor: "transparent", // Eliminar contorno blanco
+              borderWidth: 0, // Asegura que no se muestre el borde
+            },
+          ],
+        },
         options: {
           responsive: true,
         },
       });
+      setChartInstance(chart);
+      return () => chart.destroy();
     }
-  }, []);
+  }, [data, id]);
+
+  const title = data?.datasets[0]?.label;
 
   return (
-    <div className="w-80 h-auto p-4 shadow-lg  rounded-md ">
-      <h4 className="font-bold text-[#3f72af] max-w-20 text-lg  mx-auto">
+    <div className="w-72 md:w-60 h-auto p-4 dark:shadow-blue-400 dark:bg-zinc-900/80 shadow-md rounded-md">
+      <h3 className="font-bold  text-[#3f72af] max-w-20 text-lg mx-auto">
         {title}
-      </h4>
-      <canvas width="400" height="200"></canvas>
+      </h3>
+      <canvas id={id} ref={canvasRef} width="400" height="200"></canvas>
     </div>
   );
 };

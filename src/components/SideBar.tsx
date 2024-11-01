@@ -37,26 +37,22 @@ const ArrowIcon = () => {
     </svg>
   );
 };
-const ContactIcon = () => {
+const StatsIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
-      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
     >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M20 6v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2z" />
-      <path d="M10 16h6" />
-      <path d="M13 11m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-      <path d="M4 8h3" />
-      <path d="M4 12h3" />
-      <path d="M4 16h3" />
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+      <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM9 17v-5M12 17v-1M15 17v-3" />
     </svg>
   );
 };
@@ -133,14 +129,52 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
     pathname.length > 1 && pathname.endsWith("/")
       ? pathname.slice(0, -1)
       : pathname;
+  const [currentHash, setCurrentHash] = useState("");
+
+  const scrollToHash = (hash: string) => {
+    const element = document.getElementById(hash.slice(1));
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    setCurrentHash(hash);
+    if (hash) {
+      scrollToHash(hash); // Desplazarse al hash en la carga inicial
+    }
+
+    const handleHashChange = () => {
+      const newHash = window.location.hash;
+      setCurrentHash(newHash);
+      scrollToHash(newHash); // Desplazarse al nuevo hash
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
   const pages = [
-    { title: "Inicio", href: "/", icon: HomeIcon },
+    {
+      title: "Inicio",
+      href: "/#home",
+      icon: HomeIcon,
+      active: pathname === "/",
+    },
     { title: "Acerca de", href: "/#about", icon: AboutIcon },
+    { title: "Estadísticas", href: "/#stats", icon: StatsIcon },
     { title: "Amelia Bot", href: "/chat", icon: ChatIcon },
-    { title: "Contacto", href: "/#contact", icon: ContactIcon },
     { title: "Proyectos", href: "/#projects", icon: ProjectsIcon },
     { title: "Resumen", href: "/#resume", icon: ResumeIcon },
-  ].map((page) => ({ ...page, active: normalizePathName === page.href }));
+  ].map((page) => ({
+    ...page,
+    active:
+      normalizePathName === page.href ||
+      (page.href.startsWith("/#") && currentHash === page.href.slice(1)),
+  }));
   const [isReady, setIsReady] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -174,7 +208,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
     <nav
       className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${
         isOpen ? "" : "close"
-      } [box-shadow:rgba(0,_0,_0,_0.35)_0px_5px_15px] dark:text-white dark:[box-shadow:#3f72af_0px_5px_15px] transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
+      } shadow-lg dark:text-white dark:shadow-blue-400 transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
       <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black  justify-center  md:justify-start ">
         <li className="flex flex-row md:gap-4 gap-2 ">
