@@ -28,7 +28,7 @@ const description = "Una plataforma que te ayuda a crear y mantener hábitos sal
         <script src="../scripts/chat.ts"></script>
 	</head>
 	<body>
-        <div id="app" class="bg-[#f4f4f9]  dark:bg dark:text-white text-black dark:bg-[#131212] transition-all ease-in-out duration-300">
+        <div id="app" class="bg-[#f4f4f9] dark:bg dark:text-white text-black dark:bg-[#0a0a0a] transition-all ease-in-out duration-300">
             <Modal message='cerrar sesión' confirm='salir'/>
             <header class="[grid-area:header]">
                 <Header sesion={sesion as Sesion} pathname={pathname} title={title} />
@@ -36,7 +36,7 @@ const description = "Una plataforma que te ayuda a crear y mantener hábitos sal
             <aside class="[grid-area:aside] ">
                 <SideBar client:load pathname={pathname} transition:persist/>
             </aside>
-            <main class="[grid-area:main] overflow-auto" >
+            <main class="[grid-area:main] overflow-y-auto " >
                 <slot />
             </main>
         </div>
