@@ -6,7 +6,7 @@ const LinkElement = ({ link }: { link: Link }) => {
       href={link.href}
       className={`${
         link.active ? "active" : ""
-      } rounded-lg md:p-3 p-2 flex md:gap-3 gap-2 items-center dark:hover:bg-black hover:bg-[#dcdcf5] hover:scale-[1.05] transition-all duration-300 ease-in-out`}
+      } rounded-lg md:p-3 p-2 flex md:gap-3 gap-2 items-center dark:hover:bg-zinc-900 hover:bg-[#dcdcf5] hover:scale-[1.05] transition-all duration-300 ease-in-out`}
     >
       <link.icon />
       <span className="hidden md:flex ">{link.title}</span>

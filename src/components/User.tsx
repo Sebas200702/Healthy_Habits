@@ -81,8 +81,13 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
   const handleClickUser = (): void => {
     if (typeof window !== "undefined") {
       const $userDropdown: Element | null = $("#userDropdown");
-      $userDropdown?.classList.toggle("hidden");
-      console.log($userDropdown?.attributes);
+      if ($userDropdown) {
+        $userDropdown.classList.toggle("hidden");
+        $userDropdown.addEventListener("click", () => {
+          $userDropdown.classList.add("hidden");
+        });
+      }
+      
     }
   };
 
@@ -105,10 +110,9 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
         onClick={handleClickUser}
         alt={`Avatar of ${sesion?.user?.name}`}
       />
-
+<div id="userDropdown"  className="h-screen w-screen hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center backdrop-blur-sm">
       <div
-        id="userDropdown"
-        className="z-10 absolute right-0  md:-translate-x-1/2 -translate-x-1/3 hidden dark:bg-gray-950/90 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
+        className=" absolute right-0  md:-translate-x-1/2 -translate-x-1/3  dark:bg-gray-950/90 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-7"
       >
         <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div>{sesion?.user?.name}</div>
@@ -148,6 +152,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
             Salir
           </a>
         </div>
+      </div>
       </div>
     </>
   );

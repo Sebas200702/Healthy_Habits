@@ -1,0 +1,104 @@
+---
+// HealthyTipsBento.astro
+
+// Definimos el tipo para un tip de salud
+type HealthyTip = {
+  title: string;
+  description: string;
+  image: string;
+  size: 'small' | 'medium' | 'large';
+};
+
+// Creamos un array de tips de salud con el tipo definido
+const healthyTips: HealthyTip[] = [
+  {
+    title: "Bebe agua regularmente",
+    description: "Mantente hidratado bebiendo al menos 8 vasos de agua al día.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+  {
+    title: "Haz ejercicio regularmente",
+    description: "Realiza al menos 30 minutos de actividad física cada día.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+  {
+    title: "Duerme lo suficiente",
+    description: "Procura dormir de 7 a 9 horas cada noche para una buena salud.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+  {
+    title: "Come más frutas y verduras",
+    description: "Incluye 5 porciones de frutas y verduras en tu dieta diaria.",
+    image: "/public/fruits.webp",
+    size: "medium",
+  },
+  {
+    title: "Practica la meditación",
+    description: "Dedica 10 minutos al día a la meditación para reducir el estrés.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "small",
+  },
+  {
+    title: "Limita el consumo de azúcar",
+    description: "Reduce la ingesta de azúcares añadidos para mejorar tu salud general.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+  {
+    title: "Come alimentos integrales",
+    description: "Opta por granos integrales en lugar de refinados para obtener más nutrientes.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "small",
+  },
+  {
+    title: "Practica la gratitud",
+    description: "Anota tres cosas por las que estés agradecido cada día para mejorar tu bienestar mental.",
+    image: "/placeholder.svg?height=400&width=400",
+    size: "large",
+  },
+  {
+    title: "Mantén una buena postura",
+    description: "Sé consciente de tu postura durante el día, especialmente si trabajas sentado.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+  {
+    title: "Socializa regularmente",
+    description: "Mantén conexiones sociales fuertes para mejorar tu salud mental y emocional.",
+    image: "/placeholder.svg?height=200&width=200",
+    size: "medium",
+  },
+];
+
+const sizeClasses: Record<'small' | 'medium' | 'large', string> = {
+  small: 'col-span-1 row-span-1',
+  medium: 'col-span-2 row-span-1',
+  large: 'col-span-2 row-span-2',
+};
+
+
+---
+
+<section class="py-12 mt-60 px-14 md:px-20 lg:px-8 " >
+  <h2 class="text-3xl font-bold text-center mb-8">Tips de Hábitos Saludables</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-7xl mx-auto">
+    {healthyTips.map((tip, index) => {
+      return (
+        <a 
+        href=""
+         class={`group relative dark:bg-[#19191a] rounded-lg shadow-lg  overflow-hidden  ${sizeClasses[tip.size]}`}>
+          <div class="relative aspect-video">
+            <img src={tip.image} alt={tip.title} class="absolute group-hover:scale-110  opacity-90 transition-all duration-300 ease-in-out inset-0 w-full h-full object-cover" />
+          </div>
+          <div class="p-4 absolute bottom-0 left-0 right-0  flex flex-col justify-between">
+            <h3 class="text-xl font-semibold  mb-2">{tip.title}</h3>
+            <p class="text-lg ">{tip.description}</p>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</section>
