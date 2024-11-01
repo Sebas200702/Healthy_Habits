@@ -36,7 +36,8 @@ const description = "Una plataforma que te ayuda a crear y mantener hábitos sal
             <aside class="[grid-area:aside] ">
                 <SideBar client:load pathname={pathname} transition:persist/>
             </aside>
-            <main class="[grid-area:main] overflow-y-auto " >
+            <main class="[grid-area:main] overflow-y-auto
+            [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300" >
                 <slot />
             </main>
         </div>

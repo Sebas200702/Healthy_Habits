@@ -1,3 +1,79 @@
-<section class="w-full h-full max-h-[500px] md:max-h-full flex flex-col items-center">
-    <h2></h2>
+---
+import ChartComponent from "./ChartComponent";
+const data =[
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+{
+    labels: ["Enero", "Febrero", "Marzo", "Abril"],
+    datasets: [
+            {
+              label: "Ventas",
+              data: [65, 59, 80, 81],
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+},
+
+]
+
+---
+
+<section
+id="#stats"
+class="w-full max-w-5xl grid-cols-1  mx-auto gap-4 mt-80 "
+>
+{
+    data.map((chartData) =>
+    <ChartComponent data={chartData}/>
+    )
+}
 </section>

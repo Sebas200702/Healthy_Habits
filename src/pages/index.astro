@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HealthyTips from '../components/HealthyTips.astro';
+import Statics from '../components/Statics.astro';
 import Hero from '../components/Hero.astro';
 const title = 'Inicio';
 import { getSession } from 'auth-astro/server';
@@ -11,5 +12,6 @@ const sesion = await getSession(Astro.request);
 
 <Layout title={title} pathname={Astro.url.pathname} sesion={sesion as Sesion}>
         <Hero />
+        <Statics/>
         <HealthyTips />
 </Layout>
