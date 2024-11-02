@@ -1,0 +1,25 @@
+nav {
+  transition: all 0.3s ease-in-out;
+}
+
+nav.close {
+  padding: 5px;
+  width: 60px;
+  overflow: hidden;
+  & > ul > a span,
+  li > span {
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  nav.close {
+    width: 100%;
+    & > ul > li :first-child {
+      display: flex;
+    }
+  }
+}
+
+nav a span {
+  flex-grow: 1;
+}

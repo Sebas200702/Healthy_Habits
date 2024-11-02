@@ -4,22 +4,23 @@ import "../styles/SideBar.css";
 import { useState, useEffect } from "react";
 import type { Pathname } from "../types/types";
 
-const AboutIcon = () => {
+const TipsIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
-      viewBox="0 0 24 24"
       fill="none"
+      className="transition-all duration-300 ease-in-out"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
     >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <path d="M12 9h0M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5z" />
+      <path d="M11 12h1v4h1" />
     </svg>
   );
 };
@@ -30,6 +31,7 @@ const ArrowIcon = () => {
       height="24px"
       viewBox="0 -960 960 960"
       width="24px"
+      className="transition-all duration-300 ease-in-out"
       stroke="currentColor"
       fill="currentColor"
     >
@@ -43,6 +45,7 @@ const StatsIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
+      className="transition-all duration-300 ease-in-out"
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
@@ -66,6 +69,7 @@ const HomeIcon = () => {
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
+      className="transition-all duration-300 ease-in-out"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -83,6 +87,7 @@ const ProjectsIcon = () => {
       height="24px"
       viewBox="0 -960 960 960"
       stroke="currentColor"
+      className="transition-all duration-300 ease-in-out"
       fill="currentColor"
       width="24px"
     >
@@ -96,6 +101,7 @@ const ResumeIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       height="24px"
       viewBox="0 -960 960 960"
+      className="transition-all duration-300 ease-in-out"
       stroke="currentColor"
       fill="currentColor"
       width="24px"
@@ -113,6 +119,7 @@ const ChatIcon = () => {
       height="24"
       viewBox="0 0 24 24"
       fill="currentColor"
+      className="transition-all duration-300 ease-in-out"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
@@ -130,53 +137,21 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
       ? pathname.slice(0, -1)
       : pathname;
   const [currentHash, setCurrentHash] = useState("");
+  const [isReady, setIsReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
-  const scrollToHash = (hash: string) => {
-    const element = document.getElementById(hash.slice(1));
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  useEffect(() => {
-    const hash = window.location.hash;
-    setCurrentHash(hash);
-    if (hash) {
-      scrollToHash(hash); // Desplazarse al hash en la carga inicial
-    }
-
-    const handleHashChange = () => {
-      const newHash = window.location.hash;
-      setCurrentHash(newHash);
-      scrollToHash(newHash); // Desplazarse al nuevo hash
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, []);
   const pages = [
-    {
-      title: "Inicio",
-      href: "/#home",
-      icon: HomeIcon,
-      active: pathname === "/",
-    },
-    { title: "Acerca de", href: "/#about", icon: AboutIcon },
+    { title: "Inicio", href: "/#home", icon: HomeIcon },
+    { title: "Resumen", href: "/#resume", icon: ResumeIcon },
     { title: "Estadísticas", href: "/#stats", icon: StatsIcon },
+    { title: "Consejos", href: "/#tips", icon: TipsIcon },
     { title: "Amelia Bot", href: "/chat", icon: ChatIcon },
     { title: "Proyectos", href: "/#projects", icon: ProjectsIcon },
-    { title: "Resumen", href: "/#resume", icon: ResumeIcon },
   ].map((page) => ({
     ...page,
     active:
-      normalizePathName === page.href ||
-      (page.href.startsWith("/#") && currentHash === page.href.slice(1)),
+      normalizePathName === page.href || currentHash === page.href.slice(1),
   }));
-  const [isReady, setIsReady] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -186,7 +161,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
       }
       setTimeout(() => {
         setIsReady(true);
-      }, 500);
+      }, 1000);
     }
   }, []);
 
@@ -200,26 +175,48 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
     });
   };
 
+  useEffect(() => {
+    const sections = document.querySelectorAll("section"); // Suponiendo que tus secciones tienen <section id="sectionID">
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setCurrentHash(`#${entry.target.id}`);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50% 0px" }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+    };
+  }, []);
+  useEffect(() => {
+    if (currentHash) {
+      window.history.replaceState(null, "", currentHash);
+    }
+  }, [currentHash]);
+
   if (!isReady) {
     return <SkeletonSidebar isOpen={isOpen} />;
   }
 
   return (
     <nav
-      className={` bottom-0 left-0 right-0  flex flex-col p-3 md:w-48 w-full md:h-full ${
-        isOpen ? "" : "close"
-      } shadow-lg dark:text-white dark:shadow-blue-400 transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
+      className={`bottom-0 left-0 right-0 flex flex-col p-3 md:w-48 w-full md:h-full ${isOpen ? "" : "close"} shadow-lg dark:text-white dark:shadow-blue-400/40 transition-all duration-300 ease-in-out sticky md:top-0 z-50 rounded-md`}
     >
-      <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black  justify-center  md:justify-start ">
-        <li className="flex flex-row md:gap-4 gap-2 ">
-          <span className=" flex md:p-3 p-2 logo rounded-lg flex-col items-center justify-center font-mono text-xs md:text-xl">
+      <ul className="flex md:flex-col flex-row gap-2 md:gap-4 dark:text-white text-black justify-center md:justify-start">
+        <li className="flex flex-row md:gap-4 gap-2">
+          <span className="flex md:p-3 p-2 logo rounded-lg flex-col items-center justify-center font-mono text-xs md:text-xl">
             Healthy <strong className="text-[#3f72af] font-bold">Habits</strong>
           </span>
           <button
             id="toggleBtn"
-            className={`${
-              isOpen ? "" : "rotate"
-            } md:ml-auto p-3 hidden md:flex cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
+            className={`${isOpen ? "" : "rotate"} md:ml-auto p-3 hidden md:flex cursor-pointer [transition:rotate_ease-in-out_0.3s]`}
             onClick={toggle}
           >
             <ArrowIcon />

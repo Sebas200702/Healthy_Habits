@@ -7,7 +7,7 @@ const data = [
     labels: ["Enero", "Febrero", "Marzo", "Abril"],
     datasets: [
       {
-        label: "Ventas",
+        label: "Conocimiento sobre hbitos saludables",
         data: [65, 59, 80, 81],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
       },
@@ -71,14 +71,14 @@ const data = [
 
 ];
 ---
-<section id="stats" class="w-full relative overflow-hidden h-96  items-center justify-center p-2 max-w-xl flex flex-row md:max-w-3xl rounded-lg flex-wrap mx-auto gap-4 mt-48">
-    <h2 class="text-3xl font-bold text-center mb-8">Estadísticas</h2>
-    <p></p>
-    <div class="w-full h-full flex flex-row gap-3 flex-wrap items-center justify-center">
+<section id="stats" class="w-full relative overflow-hidden   items-center justify-center p-2 max-w-xl flex flex-row md:max-w-3xl rounded-lg flex-wrap mx-auto gap-4 mt-48">
+    <h2 class="text-3xl font-bold text-center mb-8 text-[#3f72af]">Estadísticas</h2>
+    <p class="text-pretty text-lg">Se realizo un estudio en la poblacion estudiatil del la <strong class="text-[#3f72af]/80 dark:text-blue-400/90">Institución Educativa Técnico Industrial El Milagroso</strong> </p>
+    <div id="stats-container" class="w-full  flex flex-row gap-3 h-96 flex-wrap items-center justify-center">
   {data.map((chartData) => (
-    <ChartComponent  client:load data={chartData} id={chartData.id} />
+    <ChartComponent  client:visible data={chartData} id={chartData.id} />
   ))}
-  <div id="more-container" class="w-full h-1/3 absolute bottom-0 left-0 bg-gradient-to-b from-transparent  to-[#3f72af]/50">
+  <div id="more-container" class="w-full h-1/2 absolute bottom-0 left-0 bg-gradient-to-b from-transparent  to-[#3f72af]/50">
   <button id="more-btn" class="bg-blue-500 hover:bg-blue-600 opacity-85 hover:opacity-100  absolute bottom-0 left-0 max-w-28 mx-auto w-full -translate-y-4 right-0 px-4 py-2 rounded-full text-white">
     Ver más
   </button>
@@ -87,7 +87,7 @@ const data = [
 </section>
 <script>
     import { $ } from "../utils";
-    const stats : HTMLElement | null = $('#stats');
+    const stats : HTMLElement | null = $('#stats-container');
     const  moreBtn : HTMLElement | null = $('#more-btn');
     const  moreContainer : HTMLElement | null = $('#more-container')
     if(stats && moreBtn && moreContainer){
