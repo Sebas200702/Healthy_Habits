@@ -2,7 +2,6 @@ import { $ } from "../utils";
 import type { Sesion } from "../types/types";
 import { useState, useEffect } from "react";
 import { signOut } from "auth-astro/client";
-import BeyondIdentity from "@auth/core/providers/beyondidentity";
 
 interface UserProps {
   sesion: Sesion;

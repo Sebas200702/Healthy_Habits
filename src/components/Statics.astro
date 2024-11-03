@@ -1,81 +1,147 @@
 ---
 import ChartComponent from "./ChartComponent";
 
-const data = [
-  {
-    id: "chart1", // ID único para el primer gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Conocimiento sobre hbitos saludables",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
-      },
-    ],
-  },
-  {
-    id: "chart2", // ID único para el segundo gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Ventas",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
-      },
-    ],
-  },
-  {
-    id: "chart3", // ID único para el tercer gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Ventas",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
-      },
-    ],
-  },
-  {
-    id: "chart4", // ID único para el cuarto gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Ventas",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
-      },
-    ],
-  },
-  {
-    id: "chart5", // ID único para el quinto gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Ventas",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
-      },
-    ],
-  },
-  {
-    id: "chart6", // ID único para el sexto gráfico
-    labels: ["Enero", "Febrero", "Marzo", "Abril"],
-    datasets: [
-      {
-        label: "Ventas",
-        data: [65, 59, 80, 81],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
-      },
-    ],
-  },
-
+const Charts = [
+    {
+        id: "chart1",
+        labels: ["Masculino", "Femenino"],
+        datasets: [
+            {
+                label: "Sexo de estudiantes",
+                data: [24, 12],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart2",
+        labels: ["Noveno", "Décimo", "Undécimo"],
+        datasets: [
+            {
+                label: "Grado de escolaridad de los estudiantes",
+                data: [11, 15, 10],
+                backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0"]
+            }
+        ]
+    },
+    {
+        id: "chart3",
+        labels: ["Poco", "Moderado", "Mucho", "Ninguno"],
+        datasets: [
+            {
+                label: "Conocimiento sobre hábitos saludables",
+                data: [1, 21, 14, 0],
+                backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"]
+            }
+        ]
+    },
+    {
+        id: "chart4",
+        labels: ["Sí", "No"],
+        datasets: [
+            {
+                label: "Importancia de los hábitos saludables",
+                data: [34, 2],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart5",
+        labels: ["Positivo", "Negativo"],
+        datasets: [
+            {
+                label: "Percepción sobre hábitos saludables",
+                data: [36, 0],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart6",
+        labels: ["De 0 a 2 veces", "De 2 a 4 veces", "De 4 a 6 veces", "Diariamente"],
+        datasets: [
+            {
+                label: "Frecuencia de actividad física",
+                data: [9, 18, 3, 6],
+                backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"]
+            }
+        ]
+    },
+    {
+        id: "chart7",
+        labels: ["Sí", "No"],
+        datasets: [
+            {
+                label: "Descanso adecuado",
+                data: [10, 26],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart8",
+        labels: ["De 0 a 2 veces", "De 2 a 4 veces", "De 4 a 6 veces", "Diariamente"],
+        datasets: [
+            {
+                label: "Frecuencia de consumo de grasas saturadas y dulces",
+                data: [8, 9, 4, 15],
+                backgroundColor: ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"]
+            }
+        ]
+    },
+    {
+        id: "chart9",
+        labels: ["Sí", "No"],
+        datasets: [
+            {
+                label: "Opinión sobre estrategias tecnológicas",
+                data: [34, 2],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart10",
+        labels: ["Sí", "No"],
+        datasets: [
+            {
+                label: "Existencia de herramientas para hábitos saludables",
+                data: [5, 31],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart11",
+        labels: ["Buena", "Mala"],
+        datasets: [
+            {
+                label: "Percepción de la gestión de hábitos saludables",
+                data: [34, 2],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    },
+    {
+        id: "chart12",
+        labels: ["Sí", "No"],
+        datasets: [
+            {
+                label: "Necesidad de implementar hábitos saludables",
+                data: [34, 2],
+                backgroundColor: ["#36A2EB", "#FFCE56"]
+            }
+        ]
+    }
 ];
+
 ---
 <section id="stats" class="w-full relative overflow-hidden   items-center justify-center p-2 max-w-xl flex flex-row md:max-w-3xl rounded-lg flex-wrap mx-auto gap-4 mt-48">
     <h2 class="text-3xl font-bold text-center mb-8 text-[#3f72af]">Estadísticas</h2>
     <p class="text-pretty text-lg">Se realizo un estudio en la poblacion estudiatil del la <strong class="text-[#3f72af]/80 dark:text-blue-400/90">Institución Educativa Técnico Industrial El Milagroso</strong> </p>
     <div id="stats-container" class="w-full  flex flex-row gap-3 h-96 flex-wrap items-center justify-center">
-  {data.map((chartData) => (
+  {Charts.map((chartData) => (
     <ChartComponent  client:visible data={chartData} id={chartData.id} />
   ))}
   <div id="more-container" class="w-full h-1/2 absolute bottom-0 left-0 bg-gradient-to-b from-transparent  to-[#3f72af]/50">
