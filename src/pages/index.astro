@@ -4,6 +4,7 @@ import HealthyTips from '../components/HealthyTips.astro';
 import Resume from '../components/resume.astro';
 import Statics from '../components/Statics.astro';
 import Hero from '../components/Hero.astro';
+import Footer from '../components/Footer.astro';
 const title = 'Inicio';
 import { getSession } from 'auth-astro/server';
 import type { Sesion } from '../types/types';
@@ -16,4 +17,5 @@ const sesion = await getSession(Astro.request);
         <Resume />
         <Statics/>
         <HealthyTips />
+        <Footer />
 </Layout>
