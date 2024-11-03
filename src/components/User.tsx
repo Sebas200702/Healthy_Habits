@@ -2,6 +2,7 @@ import { $ } from "../utils";
 import type { Sesion } from "../types/types";
 import { useState, useEffect } from "react";
 import { signOut } from "auth-astro/client";
+import { deleteMessages } from "../scripts/chat";
 
 interface UserProps {
   sesion: Sesion;
@@ -9,10 +10,9 @@ interface UserProps {
 }
 
 export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
-  const [theme, setTheme] = useState("dark"); // Valor por defecto
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
-    // Al cargar el componente, recupera el tema del localStorage en el cliente
     if (typeof window !== "undefined") {
       const storedTheme = localStorage.getItem("theme") || "dark";
       setTheme(storedTheme);
@@ -20,7 +20,6 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
   }, []);
 
   useEffect(() => {
-    // Cambia las clases de tema cuando el estado cambie
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
@@ -28,15 +27,6 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
-
-  const deleteMessages = async (): Promise<void> => {
-    await fetch("/api/deleteMessages", {
-      method: "POST",
-      body: JSON.stringify({
-        userName: sesion?.user?.name,
-      }),
-    });
-  };
 
   const handleClickSignOut = (): void => {
     if (typeof window !== "undefined") {
