@@ -33,15 +33,6 @@ const saveMessage = async (message: Message): Promise<void> => {
   });
 };
 
-export const deleteMessages = async (): Promise<void> => {
-  await fetch("/api/deleteMessages", {
-    method: "POST",
-    body: JSON.stringify({
-      userName: sessionData?.user?.name,
-    }),
-  });
-};
-
 if (typeof window !== "undefined") {
   const fetchSession = async (): Promise<void> => {
     try {

@@ -2,7 +2,6 @@ import { $ } from "../utils";
 import type { Sesion } from "../types/types";
 import { useState, useEffect } from "react";
 import { signOut } from "auth-astro/client";
-import { deleteMessages } from "../scripts/chat";
 
 interface UserProps {
   sesion: Sesion;
@@ -18,7 +17,14 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
       setTheme(storedTheme);
     }
   }, []);
-
+  const deleteMessages = async (): Promise<void> => {
+    await fetch("/api/deleteMessages", {
+      method: "POST",
+      body: JSON.stringify({
+        userName: sesion?.user?.name,
+      }),
+    });
+  };
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
