@@ -186,7 +186,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50% 0px" }
+      { threshold: 0.07, rootMargin: "0px 0px -50% 0px" }
     );
 
     sections.forEach((section) => observer.observe(section));
