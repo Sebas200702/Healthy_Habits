@@ -33,7 +33,7 @@ const saveMessage = async (message: Message): Promise<void> => {
   });
 };
 
-const deleteMessages = async (): Promise<void> => {
+export const deleteMessages = async (): Promise<void> => {
   await fetch("/api/deleteMessages", {
     method: "POST",
     body: JSON.stringify({
@@ -111,7 +111,7 @@ $form?.addEventListener("submit", async (e: Event) => {
   }
 });
 
-function addMessage(
+export function addMessage(
   sender: string,
   message: string,
   time: string
