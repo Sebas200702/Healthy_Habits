@@ -1,0 +1,37 @@
+---
+const { title, description , completed , time  , id} = Astro.props;
+interface Props {
+    title?: string;
+    description?: string;
+    completed?: boolean;
+    time?: string;
+    id?: string;
+}
+import Edit from './icons/Edit.astro';
+import Delete from './icons/Delete.astro';
+import NoDone from './icons/NoDone.astro';
+import Done from './icons/Done.astro';
+import Chatbot from './icons/Chatbot.astro';
+import Tooltip from './Tooltip.astro'
+---
+<li id="target-container" class="flex flex-col mt-4 md:w-[700px]  w-[350px] justify-between md:relative md:flex-row gap-4 p-4 rounded-lg bg-white dark:bg-zinc-800 shadow-md">
+    <div class="flex flex-col">
+        <h3 id="target-title" class="text-pretty text-2xl font-bold">{title}</h3>
+        <p id="target-description" class="md:max-w-96 max-w-full text-wrap text-sm">{description}</p>
+    </div>
+    <div id="target-buttons" class="flex opacity-0 flex-row gap-2 self-end">
+        <button id="edit-target" data-tooltip-target="tooltip-edit-target"
+        data-tooltip-placement="bottom"class="opacity-80 hover:opacity-100 hover:text-[#3f72af]" ><Edit /></button>
+        <Tooltip text='Editar' id='edit-target'/>
+        <button id="delete-target" data-tooltip-target="tooltip-delete-target"
+        data-tooltip-placement="bottom" class="opacity-80 hover:opacity-100 hover:text-[#3f72af]"><Delete/></button>
+        <Tooltip text='Eliminar' id='delete-target'/>
+        <button id="completed-target" disabled={completed} data-tooltip-target="tooltip-completed-target"
+        data-tooltip-placement="bottom" class="opacity-80 hover:opacity-100  hover:text-[#3f72af]">{
+            completed ? <Done/> : <NoDone/>
+        }</button>
+        <Tooltip text={completed ? 'completado' : 'completar'} id='completed-target'/>
+    </div>
+    <span id="target-time" class="text-xs md:absolute md:top-3 md:right-3 dark:text-gray-200 text-gray-500 place-self-start">{time}</span>
+    <span id="target-id" class="hidden">{id}</span>
+</li>

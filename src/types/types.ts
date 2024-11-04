@@ -20,5 +20,13 @@ export type Message = {
   time?: string;
   userName: string | undefined;
 };
+export type Target = {
+  title?: string;
+  description?: string;
+  completed?: boolean;
+  userName?: string | undefined;
+  time?: string;
+  target_id?: string;
+};
 
 export type Messages = Array<Message>;

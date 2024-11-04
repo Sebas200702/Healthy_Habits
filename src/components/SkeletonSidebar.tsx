@@ -1,4 +1,4 @@
-import "../styles/SkeletonSidebar.css";
+import "@styles/SkeletonSidebar.css";
 export const SkeletonSidebar = ({ isOpen }: { isOpen: boolean }) => {
   return (
     <nav

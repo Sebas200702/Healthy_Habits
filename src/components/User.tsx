@@ -1,4 +1,4 @@
-import { $ } from "../utils";
+import { $ } from "@utils";
 import type { Sesion } from "../types/types";
 import { useState, useEffect } from "react";
 import { signOut } from "auth-astro/client";
@@ -78,6 +78,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
       }
     }
   };
+  const handleClickDeleteTargets = (): void => {};
 
   const handleClickUser = (): void => {
     if (typeof window !== "undefined") {
@@ -130,6 +131,18 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
                 </a>
               </li>
             ) : null}
+            {pathname === "/goals" ? (
+              <li>
+                <a
+                  id="borrar"
+                  className="block dark:hover:bg-gray-600 cursor-pointer hover:text-red-500 px-4 py-2"
+                  onClick={handleClickDeleteTargets}
+                >
+                  Borrar Objetivos
+                </a>
+              </li>
+            ) : null}
+
             <li>
               <a
                 onClick={handleClickTheme}

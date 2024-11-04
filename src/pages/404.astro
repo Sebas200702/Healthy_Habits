@@ -1,8 +1,18 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "@layouts/Layout.astro";
+import { getSession } from "auth-astro/server";
+import type { Sesion } from "types/types";
+const sesion = await getSession(Astro.request);
 ---
 
-<Layout title="Error 404" pathname={Astro.url.pathname} >
-
-
+<Layout title="Error 404" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
+    <section  class="w-full  md:max-h-full flex  flex-col items-center">
+        <h1 class="text-pretty text-center mt-32 text-5xl font-bold">Error 404</h1>
+        <p class="text-pretty mt-10 text-center text-xl">
+            Lo sentimos, no hemos encontrado la página que buscas.
+        </p>
+        <a href="/" class="bg-[#3f72af] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-10">
+            Volver al inicio
+        </a>
+    </section>
 </Layout>

@@ -1,4 +1,4 @@
-import { $ } from "./../utils";
+import { $ } from "@utils";
 import { signIn } from "auth-astro/client";
 const GoogleIcon = () => {
   return (

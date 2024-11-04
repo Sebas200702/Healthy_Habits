@@ -74,7 +74,7 @@ const sizeClasses: Record<'small' | 'medium' | 'large', string> = {
   <h2 class="text-3xl font-bold text-center mb-8 text-[#3f72af]">Tips de Hábitos Saludables</h2>
   <div class="grid grid-cols-1 md:grid-cols-5  gap-4 max-w-3xl w-full mx-auto">
     {healthyTips.map((tip, ) => (
-      <div class={`group relative dark:bg-zinc-950/90 rounded-lg shadow-lg overflow-hidden ${sizeClasses[tip.size]}`} >
+      <div class={`group relative dark:bg-zinc-950/90 bg-slate-100 rounded-lg shadow-lg overflow-hidden ${sizeClasses[tip.size]}`} >
         <div class="relative aspect-video">
           <img src={tip.image} alt={tip.title} loading="lazy" class="absolute group-hover:scale-110 opacity-90 transition-all duration-300 ease-in-out inset-0 w-full h-full object-cover" />
         </div>

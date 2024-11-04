@@ -1,9 +1,9 @@
 ---
-import SideBar from '../components/SideBar.tsx'
-import Header from '../components/Header.astro';
-import ScrollToHash from '../components/Scroll.tsx';
+import SideBar from '@components/SideBar.tsx'
+import Header from '@components/Header.astro';
+import ScrollToHash from '@components/Scroll.tsx';
 import type { Sesion } from "../types/types";
-import Modal from '../components/Modal.astro';
+import Modal from '@components/Modal.astro';
 
 interface Props {
 	title: string;
@@ -14,92 +14,81 @@ const { title } = Astro.props;
 const { pathname } = Astro.url;
 if (Astro.url.pathname === '/') {
     Astro.redirect('/#home');
-
 }
 const { sesion } = Astro.props;
-const SEOTitle = ` Healthy Habits - Promoción de la salud en medios digitales`;
+const SEOTitle = `Healthy Habits - Promoción de la salud en medios digitales`;
 const description = "Una plataforma que te ayuda a crear y mantener hábitos saludables en tu vida";
 ---
 
 <!doctype html>
-<html lang="es"  >
-	<head>
-		<meta charset="UTF-8" />
-		<title>{SEOTitle}</title>
-		<meta name="description" content={description} />
-		<meta name="viewport" content="width=device-width" />
-        <link rel="icon"  href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-        <script src="../scripts/chat.ts"></script>
-	</head>
-	<body>
-        <ScrollToHash client:load />
-        <div id="app" class="bg-[#f4f4f9] dark:bg dark:text-white text-black dark:bg-[#121212] transition-all ease-in-out duration-300">
-            <Modal message='cerrar sesión' confirm='salir'/>
-            <header class="[grid-area:header]">
-                <Header sesion={sesion as Sesion} pathname={pathname} title={title} />
-            </header>
-            <aside class="[grid-area:aside] ">
-                <SideBar client:load pathname={pathname} transition:persist/>
-            </aside>
-            <main class="[grid-area:main] overflow-y-auto
-            [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth " >
-                <slot />
-            </main>
-        </div>
-	</body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>{SEOTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <script src="../scripts/chat.ts"></script>
+    <script src="../scripts/goals.ts"></script>
+</head>
+<body>
+    <ScrollToHash client:load />
+    <div id="app" class="bg-[#f4f4f9] dark:bg-[#121212] dark:text-white text-black transition-all ease-in-out duration-300">
+        <Modal message='cerrar sesión' confirm='salir' />
+        <header class="[grid-area:header]">
+            <Header sesion={sesion as Sesion} pathname={pathname} title={title} />
+        </header>
+        <aside class="[grid-area:aside]">
+            <SideBar client:load pathname={pathname} transition:persist />
+        </aside>
+        <main class="[grid-area:main] overflow-y-auto waves-background
+            [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 scroll-smooth">
+            <slot />
+        </main>
+    </div>
+</body>
 </html>
-<style is:global>
 
-    @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=SUSE:wght@100..800&display=swap');
-    h1,h2,h3,h4,h5,h6 {
+<style is:global>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=SUSE:wght@100..800&display=swap');
+
+    h1, h2, h3, h4, h5, h6 {
         font-family: "Kanit", sans-serif;
+        color: #3f72af; /* Títulos color de énfasis */
     }
 
     #app {
-  display: grid;
-  height: 100dvh;
-  width: 100dvw;
-  grid-template-areas:
-    "aside header header"
-    "aside main main"
-    "aside main main";
-  grid-template-rows: 0.3fr 5fr auto;
-  grid-template-columns: auto 5fr;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  text-align: left;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-overflow-scrolling: touch;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-@media screen and (max-width: 768px) {
-  #app {
-    display: grid;
-    grid-template-areas:
-      "header header"
-      "main main"
-      "aside aside";
-    grid-template-rows: 0.3fr 5fr;
-    grid-template-columns: auto 5fr;
-    height: 100dvh;
-    width: 100dvw;
-  }
-}
-.chatSection {
+        display: grid;
+        height: 100dvh;
+        width: 100dvw;
+        grid-template-areas:
+            "aside header header"
+            "aside main main"
+            "aside main main";
+        grid-template-rows: 0.3fr 5fr auto;
+        grid-template-columns: auto 5fr;
+        font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-overflow-scrolling: touch;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .chatSection {
         display: grid;
         grid-template-areas:
         "output output output"
@@ -131,4 +120,36 @@ const description = "Una plataforma que te ayuda a crear y mantener hábitos sal
         color: gray;
     }
 
+    @media screen and (max-width: 768px) {
+        #app {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "main main"
+                "aside aside";
+            grid-template-rows: 0.3fr 5fr;
+            grid-template-columns: auto 5fr;
+            height: 100dvh;
+            width: 100dvw;
+        }
+    }
+
+    .waves-background {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233f72af" fill-opacity="1" d="M0,192L48,186.7C96,181,192,171,288,160C384,149,480,139,576,160C672,181,768,235,864,224C960,213,1056,139,1152,106.7C1248,75,1344,85,1392,90.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path><path fill="%23e6f0ff" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,149.3C384,117,480,75,576,58.7C672,43,768,53,864,85.3C960,117,1056,171,1152,165.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path><path fill="%23c0d8e6" fill-opacity="1" d="M0,320L48,298.7C96,277,192,235,288,192C384,149,480,107,576,112C672,117,768,171,864,186.7C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .dark .waves-background {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23222" fill-opacity="1" d="M0,192L48,186.7C96,181,192,171,288,160C384,149,480,139,576,160C672,181,768,235,864,224C960,213,1056,139,1152,106.7C1248,75,1344,85,1392,90.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path><path fill="%23333" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,149.3C384,117,480,75,576,58.7C672,43,768,53,864,85.3C960,117,1056,171,1152,165.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path><path fill="%23444" fill-opacity="1" d="M0,320L48,298.7C96,277,192,235,288,192C384,149,480,107,576,112C672,117,768,171,864,186.7C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+    #send[disabled] {
+        opacity: 0.5;
+        pointer-events: none;
+        color: gray;
+    }
 </style>

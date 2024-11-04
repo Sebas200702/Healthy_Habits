@@ -1,0 +1,79 @@
+---
+import Layout from '@layouts/Layout.astro';
+import type { Sesion } from '../types/types';
+import { getSession } from "auth-astro/server";
+import TargetForm from '@components/TargetForm.astro';
+import UpdateTargetForm from '@components/UpdateTargetForm.astro';
+import Target from '@components/Target.astro';
+import type{ Target as TargetType } from '../types/types';
+
+const sesion = await getSession(Astro.request);
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://healthyhabits.vercel.app' : 'http://localhost:4321';
+
+
+const getTargets = async (): Promise<{ targets: Array<TargetType> }> => {
+    const res: Response = await fetch(`${baseUrl}/api/targets`, {
+        method: 'POST',
+        body: JSON.stringify({
+            userName: sesion?.user?.name
+        })
+    });
+    if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.targets)) {
+            return { targets: data.targets };
+        } else {
+            return { targets: [] };
+        }
+    }
+    return { targets: [] };
+};
+const result = await getTargets();
+
+---
+
+<Layout title="Objetivos" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
+    <section class=""  >
+    <h1 class="text-pretty text-center text-4xl font-bold">Objetivos</h1>
+    <p class="text-pretty text-center text-xl mt-8">
+        Administra y crea objetivos para mejorar tus hábitos saludables
+    </p>
+    {
+        sesion ? (
+                <TargetForm />
+                <UpdateTargetForm />
+            <div id="targets" class="flex flex-col mt-12 items-center justify-center">
+               <div>
+                <button id="new-target" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >
+                   Nuevo objetivo
+                </button>
+               </div>
+                <ul class="flex flex-col p-2 mt-12">
+                    {
+                        result.targets.length === 0 ? (
+                            <li class="flex flex-col justify-center items-center">
+                                <h1 class="text-pretty text-center text-2xl font-bold">
+                                    No tienes objetivos
+                                </h1>
+                            </li>
+                        ):(
+                        result.targets.map(target => (
+                            <Target title={target.title} description={target.description} completed={target.completed} time={target.time} id={target.target_id}  />
+                    ))
+                        )
+                    }
+                </ul>
+            </div>
+        ):(
+            <div class="flex flex-col mt-20 items-center justify-center">
+                <h1 class="text-pretty text-center text-2xl font-bold">
+                    Inicia sesión para ver tus objetivos
+                </h1>
+            </div>
+        )
+    }
+    <template id="target-template">
+        <Target/>
+    </template>
+    </section>
+</Layout>

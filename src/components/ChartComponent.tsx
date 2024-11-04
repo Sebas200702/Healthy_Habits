@@ -68,7 +68,7 @@ const ChartComponent: FC<ChartComponentProps> = ({ data, id }) => {
   const title: string | undefined = data?.datasets[0]?.label;
 
   return (
-    <div className="w-72 md:w-60 h-auto p-4 dark:shadow-blue-400/40 dark:bg-zinc-900/80 shadow-md rounded-md">
+    <div className="w-72 md:w-60 h-auto p-4 dark:shadow-blue-400/40 bg-slate-100 dark:bg-zinc-900/80 shadow-md rounded-md">
       <h3 className="font-bold text-[#3f72af] dark:text-blue-400/90 max-w-52 min-h-12 text-center text-wrap mx-auto">
         {title}
       </h3>

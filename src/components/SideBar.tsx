@@ -1,6 +1,6 @@
 import LinkElement from "./Link.jsx";
 import { SkeletonSidebar } from "./SkeletonSidebar";
-import "../styles/SideBar.css";
+import "@styles/SideBar.css";
 import { useState, useEffect } from "react";
 import type { Pathname } from "../types/types";
 
@@ -80,7 +80,7 @@ const HomeIcon = () => {
     </svg>
   );
 };
-const ProjectsIcon = () => {
+const GoalsIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +146,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
     { title: "Estadísticas", href: "/#stats", icon: StatsIcon },
     { title: "Consejos", href: "/#tips", icon: TipsIcon },
     { title: "Amelia Bot", href: "/chat", icon: ChatIcon },
-    { title: "Proyectos", href: "/#projects", icon: ProjectsIcon },
+    { title: "Objetivos", href: "/goals", icon: GoalsIcon },
   ].map((page) => ({
     ...page,
     active:
@@ -161,7 +161,7 @@ const SideBar = ({ pathname }: { pathname: Pathname }) => {
       }
       setTimeout(() => {
         setIsReady(true);
-      }, 1000);
+      }, 500);
     }
   }, []);
 

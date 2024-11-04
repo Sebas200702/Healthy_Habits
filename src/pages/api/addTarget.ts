@@ -2,15 +2,14 @@ import { supabase } from "@lib/supabase";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request }) => {
-  const { userName } = await request.json();
-  console.log(userName);
+  const { target } = await request.json();
+  console.log(target);
+  const { userName } = target;
   const { data: userId, error: userError } = await supabase
     .from("profiles")
     .select("id")
     .eq("user_name", userName);
-
   if (userError) {
-    console.log(userError);
     return new Response(JSON.stringify({ error: "No hay sesión activa" }), {
       status: 401,
       headers: {
@@ -20,15 +19,18 @@ export const POST: APIRoute = async ({ request }) => {
   }
   const parsedUserId = userId?.[0]?.id;
 
-  const { data, error } = await supabase
-    .from("messages")
-    .delete()
-    .eq("user_id", parsedUserId);
+  const { data, error } = await supabase.from("targets").upsert({
+    title: target.title,
+    description: target.description,
+    user_id: parsedUserId,
+    time: target.time,
+    completed: target.completed,
+  });
 
   if (error) {
     console.log(error);
-    return new Response(JSON.stringify({ error: "No hay mensajes de chat" }), {
-      status: 404,
+    return new Response(JSON.stringify({ error: "error al guardar mensaje" }), {
+      status: 401,
       headers: {
         "Content-Type": "application/json",
       },

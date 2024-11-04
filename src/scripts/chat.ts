@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { $ } from "./../utils";
+import { $, fetchSession, timeConfig } from "@utils";
 import type { Message } from "../types/types";
 const apiKey: string = "AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c";
 const $btn: HTMLElement | null = $("#send");
@@ -12,12 +12,7 @@ const $template: HTMLTemplateElement | null = $(
 ) as HTMLTemplateElement;
 const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const timeConfig: Intl.DateTimeFormatOptions = {
-  month: "short",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-};
+
 const chat = model.startChat();
 let sessionData: {
   user?: { name: string; image: string };
@@ -34,19 +29,7 @@ const saveMessage = async (message: Message): Promise<void> => {
 };
 
 if (typeof window !== "undefined") {
-  const fetchSession = async (): Promise<void> => {
-    try {
-      const res: Response = await fetch("/api/session");
-      if (res.ok) {
-        sessionData = await res.json();
-      } else {
-        sessionData = { error: "No hay sesión activa" };
-      }
-    } catch (err) {
-      console.error("Error al obtener la sesión:", err);
-    }
-  };
-  fetchSession();
+  sessionData = await fetchSession();
 }
 
 $form?.addEventListener("submit", async (e: Event) => {
@@ -119,42 +102,42 @@ export function addMessage(
   ) as HTMLImageElement;
   const $copy: HTMLElement | null = clonedTemplate.querySelector("#copy");
   const $text: HTMLElement | null = clonedTemplate.querySelector("#message");
+  if (
+    !$messageContainer ||
+    !$who ||
+    !$time ||
+    !$img ||
+    !$copy ||
+    !$text ||
+    !$messages ||
+    !sessionData?.user?.name
+  )
+    return;
 
-  if ($messageContainer) {
-    $messageContainer.classList.add(`${sender}-message`);
-    if ($copy) {
-      sender !== "You"
-        ? $copy.classList.remove("hidden")
-        : $copy.classList.add("hidden");
+  $messageContainer.classList.add(`${sender}-message`);
 
-      if ($who) {
-        if (sessionData?.user?.name) {
-          $who.textContent =
-            sender === "You" ? sessionData?.user?.name : "Amelia";
-        }
-      }
-      if ($text) {
-        $text.textContent = message;
-      }
-      if ($time) {
-        $time.textContent = time;
-      }
-      if ($img) {
-        if (sessionData?.user?.image) {
-          $img.src =
-            sender === "You"
-              ? sessionData?.user?.image
-              : "https://flowbite.com/docs/images/people/profile-picture-4.jpg";
-          $img.alt =
-            sender === "You"
-              ? `Avatar de ${sessionData?.user?.name}`
-              : "Avatar de Amelia";
-        }
-      }
-      if ($messages) {
-        $messages.appendChild($messageContainer);
-      }
-      return $text;
-    }
+  sender !== "You"
+    ? $copy.classList.remove("hidden")
+    : $copy.classList.add("hidden");
+
+  if (sessionData?.user?.name) {
+    $who.textContent = sender === "You" ? sessionData?.user?.name : "Amelia";
   }
+
+  $text.textContent = message;
+
+  $time.textContent = time;
+
+  $img.src =
+    sender === "You"
+      ? sessionData?.user?.image
+      : "https://flowbite.com/docs/images/people/profile-picture-4.jpg";
+  $img.alt =
+    sender === "You"
+      ? `Avatar de ${sessionData?.user?.name}`
+      : "Avatar de Amelia";
+
+  $messages.appendChild($messageContainer);
+
+  return $text;
 }
