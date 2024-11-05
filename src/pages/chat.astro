@@ -22,7 +22,7 @@ const getMessages = async (): Promise<{ messages: Array<Message> }> => {
             // Añadir un mensaje predeterminado
             const defaultMessage: Message = {
                 role: "Bot",
-                content: "¡Bienvenido al chat! ¿En qué puedo ayudarte hoy?",
+                content: "¡Bienvenido soy Amelia una inteligencia artificial, mi objetivo es ayudarte en cualquier duda que tengas sobre la salud y hábitos saludables, Dime en qué puedo ayudarte hoy? ",
                 userName,
             };
             return { messages: [defaultMessage, ...data.messages] }; // Coloca el mensaje predeterminado primero
