@@ -60,7 +60,7 @@ $form?.addEventListener("submit", async (e: Event) => {
     "",
     new Date().toLocaleTimeString("es-ES", timeConfig)
   );
-  console.log(chunks);
+ 
   for await (const item of chunks.stream) {
     if (!item.candidates) {
       continue;
@@ -80,9 +80,9 @@ $form?.addEventListener("submit", async (e: Event) => {
   };
   await saveMessage(botMessage);
   $btn?.removeAttribute("disabled");
-  if ($output) {
-    $output.scrollTop = $output.scrollHeight;
-  }
+ if($output){
+   $output.scrollTop = $output.scrollHeight
+ }
 });
 
 export function addMessage(
@@ -110,6 +110,7 @@ export function addMessage(
     !$copy ||
     !$text ||
     !$messages ||
+    !$output||
     !sessionData?.user?.name
   )
     return;
@@ -138,6 +139,7 @@ export function addMessage(
       : "Avatar de Amelia";
 
   $messages.appendChild($messageContainer);
+  $output.scrollTop = $output.scrollHeight
 
   return $text;
 }
