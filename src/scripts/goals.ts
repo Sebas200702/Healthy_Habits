@@ -258,5 +258,6 @@ $targetForm?.addEventListener("submit", async (e) => {
     });
     $targetForm?.classList.replace("flex", "hidden");
     $targets?.classList.replace("hidden", "flex");
+    window.location.reload()
   }
 });
