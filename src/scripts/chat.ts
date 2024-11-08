@@ -30,10 +30,8 @@ const saveMessage = async (message: Message): Promise<void> => {
 
 if (typeof window !== "undefined") {
   sessionData = await fetchSession();
-  if ($output){
-
- 
-$output.scrollTop = $output.scrollHeight
+  if ($output) {
+    $output.scrollTop = $output.scrollHeight;
   }
 }
 
@@ -65,7 +63,7 @@ $form?.addEventListener("submit", async (e: Event) => {
     "",
     new Date().toLocaleTimeString("es-ES", timeConfig)
   );
- 
+
   for await (const item of chunks.stream) {
     if (!item.candidates) {
       continue;
@@ -85,9 +83,9 @@ $form?.addEventListener("submit", async (e: Event) => {
   };
   await saveMessage(botMessage);
   $btn?.removeAttribute("disabled");
- if($output){
-   $output.scrollTop = $output.scrollHeight
- }
+  if ($output) {
+    $output.scrollTop = $output.scrollHeight;
+  }
 });
 
 export function addMessage(
@@ -115,7 +113,7 @@ export function addMessage(
     !$copy ||
     !$text ||
     !$messages ||
-    !$output||
+    !$output ||
     !sessionData?.user?.name
   )
     return;
@@ -144,7 +142,7 @@ export function addMessage(
       : "Avatar de Amelia";
 
   $messages.appendChild($messageContainer);
-  $output.scrollTop = $output.scrollHeight
+  $output.scrollTop = $output.scrollHeight;
 
   return $text;
 }

@@ -38,7 +38,7 @@ const result = await getMessages();
 ---
 
 <Layout title="Chat" pathname={Astro.url.pathname} sesion={sesion as Sesion}>
-    <section class="w-full chatSection relative p-2 max-h-full max-h-[500px]" transition:animate="none" >
+    <section class="w-full chatSection relative p-2 max-h-full " transition:animate="none" >
         <ChatComponet sesion={sesion as Sesion} messages={result.messages as Messages } />
     </section>
     <template id="message-template">

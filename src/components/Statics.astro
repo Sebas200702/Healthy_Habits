@@ -139,8 +139,8 @@ const Charts = [
 ---
 <section id="stats" class="w-full relative overflow-hidden   items-center justify-center p-2 max-w-xl flex flex-row md:max-w-3xl rounded-lg flex-wrap mx-auto gap-4 mt-48">
     <h2 class="text-3xl font-bold text-center mb-8 text-[#3f72af]">Estadísticas</h2>
-    <p class="text-pretty text-lg">Se realizo un estudio en la poblacion estudiatil del la <strong class="text-[#3f72af]/80 dark:text-blue-400/90">Institución Educativa Técnico Industrial El Milagroso</strong> </p>
-    <div id="stats-container" class="w-full  flex flex-row gap-3 h-96 flex-wrap items-center justify-center">
+    <p class=" text-center p-4 text-lg">Se realizo un estudio en la poblacion estudiatil del la <strong class="text-[#3f72af]/80 dark:text-blue-400/90">Institución Educativa Técnico Industrial El Milagroso. </strong>Para medir la percepción de los <strong class="text-[#3f72af]/80 dark:text-blue-400/90">hábitos saludables</strong> . </p>
+    <div id="stats-container" class="w-full flex flex-row gap-3 h-96 flex-wrap items-center justify-center">
   {Charts.map((chartData) => (
     <ChartComponent  client:visible data={chartData} id={chartData.id} />
   ))}
