@@ -30,6 +30,11 @@ const saveMessage = async (message: Message): Promise<void> => {
 
 if (typeof window !== "undefined") {
   sessionData = await fetchSession();
+  if ($output){
+
+ 
+$output.scrollTop = $output.scrollHeight
+  }
 }
 
 $form?.addEventListener("submit", async (e: Event) => {
