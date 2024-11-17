@@ -97,6 +97,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
   };
 
   const handleClickTheme = (): void => {
+    if(window.matchMedia("(prefers-color-scheme: dark)").matches) return;
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
