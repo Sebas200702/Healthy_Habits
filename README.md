@@ -1,17 +1,6 @@
 #Healty Habits
 
-```sh
-
-```
-
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-
-```text
-```
+Una página web creada con el fin de promover los hábitos saludables en niños jóvenes y estudiantes 
 
 
 
