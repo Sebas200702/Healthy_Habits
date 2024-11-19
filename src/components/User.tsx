@@ -9,11 +9,15 @@ interface UserProps {
 }
 
 export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedTheme = localStorage.getItem("theme") || "dark";
+      if(window.matchMedia("(prefers-color-scheme: dark)").matches){
+        setTheme("dark");
+        return;
+      }
+      const storedTheme = localStorage.getItem("theme") || "light";
       setTheme(storedTheme);
     }
   }, []);
@@ -93,6 +97,7 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
   };
 
   const handleClickTheme = (): void => {
+    if(window.matchMedia("(prefers-color-scheme: dark)").matches) return;
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
 
