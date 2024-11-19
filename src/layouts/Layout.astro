@@ -4,7 +4,7 @@ import Header from '@components/Header.astro';
 import ScrollToHash from '@components/Scroll.tsx';
 import type { Sesion } from "../types/types";
 import Modal from '@components/Modal.astro';
-
+import SpeedInsights from "@vercel/speed-insights/astro";
 interface Props {
 	title: string;
     pathname: string;
@@ -28,6 +28,7 @@ const description = "Una plataforma que te ayuda a crear y mantener hábitos sal
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.svg" />
+    <SpeedInsights />
     <meta name="generator" content={Astro.generator} />
     <script src="../scripts/chat.ts"></script>
     <script src="../scripts/goals.ts"></script>
