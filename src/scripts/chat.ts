@@ -136,11 +136,8 @@ export function addMessage(
   if (sessionData?.user?.name) {
     $who.textContent = sender === "You" ? sessionData?.user?.name : "Amelia";
   }
-
   $text.textContent = message;
-
   $time.textContent = time;
-
   $img.src =
     sender === "You"
       ? sessionData?.user?.image
