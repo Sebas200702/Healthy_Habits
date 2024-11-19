@@ -1,7 +1,5 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { $, fetchSession, timeConfig } from "@utils";
 import type { Message } from "../types/types";
-const apiKey: string = "AIzaSyD6AqMG6N09SxOjTwmwfu09GXtws1dam2c";
 const $btn: HTMLElement | null = $("#send");
 const $input: HTMLInputElement | null = $("#chat") as HTMLInputElement;
 const $output: HTMLElement | null = $("#output");
@@ -10,10 +8,7 @@ const $messages: HTMLElement | null = $("#messages");
 const $template: HTMLTemplateElement | null = $(
   "#message-template"
 ) as HTMLTemplateElement;
-const genAI: GoogleGenerativeAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const chat = model.startChat();
 let sessionData: {
   user?: { name: string; image: string };
   error?: string;
@@ -56,7 +51,18 @@ $form?.addEventListener("submit", async (e: Event) => {
   };
 
   await saveMessage(userMessage);
-  const chunks = await chat.sendMessageStream(messageText);
+
+  const messageResult = await fetch("/api/chat", {
+    method: "POST",
+    body: JSON.stringify({
+      message: messageText,
+    }),
+  });
+  if (!messageResult.body) {
+    console.error("Error: No se recibió un cuerpo de respuesta.");
+    return;
+  }
+
   let reply: string = "";
   const $botmessage = addMessage(
     "Bot",
@@ -64,20 +70,23 @@ $form?.addEventListener("submit", async (e: Event) => {
     new Date().toLocaleTimeString("es-ES", timeConfig)
   );
 
-  for await (const item of chunks.stream) {
-    if (!item.candidates) {
-      continue;
-    }
-    const [choice] = item.candidates;
-    const content = choice.content.parts[0].text ?? "";
-    reply += content;
+  const reader = messageResult.body.getReader();
+  const decoder = new TextDecoder();
+  let done = false;
+  let buffer = "";
+
+  while (!done) {
+    const { value, done: doneReading } = await reader.read();
+    done = doneReading;
+    buffer += decoder.decode(value, { stream: true });
     if ($botmessage) {
-      $botmessage.textContent = reply;
+      $botmessage.textContent = buffer;
     }
   }
+
   const botMessage: Message = {
     role: "Bot",
-    content: reply,
+    content: buffer.trim(),
     userName: sessionData?.user?.name,
     time: new Date().toLocaleTimeString("es-ES", timeConfig),
   };
@@ -127,11 +136,8 @@ export function addMessage(
   if (sessionData?.user?.name) {
     $who.textContent = sender === "You" ? sessionData?.user?.name : "Amelia";
   }
-
   $text.textContent = message;
-
   $time.textContent = time;
-
   $img.src =
     sender === "You"
       ? sessionData?.user?.image
