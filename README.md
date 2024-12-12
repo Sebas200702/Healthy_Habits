@@ -21,16 +21,6 @@
 - **[Tailwind CSS](https://tailwindcss.com/):** Estilizado rápido y altamente personalizable.
 - **[Supabase](https://supabase.com/):** Backend como servicio para la gestión de datos.
 - **[Chart.js](https://www.chartjs.org/):** Visualización de datos interactiva y adaptativa.
-
----
-
-## 🖥️ **Capturas de Pantalla**
-✨ Añade aquí imágenes llamativas de tu aplicación mostrando el diseño y características clave.  
-*(Puedes incluir capturas de pantalla o GIFs usando Markdown, por ejemplo:)*  
-```markdown
-![Healthy Habits](ruta/a/tu/imagen.png)
-```
-
 ---
 
 ## 🧑‍💻 **Instalación**
@@ -92,15 +82,9 @@ Healthy_Habits/
 
 ---
 
-## ⚖️ **Licencia**
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
 ## 📬 **Contacto**
 ¿Tienes preguntas o sugerencias? No dudes en ponerte en contacto:  
-📧 Email: [sebas@example.com](mailto:sebas@example.com)  
-🐦 Twitter: [@Sebas200702](https://twitter.com/Sebas200702)
+📧 Email: [sebastorregroza6@gmail.com](mailto:sebastorregroza6@gmail.com)  
 
 ---
 
@@ -108,10 +92,5 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE)
 Si este proyecto te resulta útil, no olvides darle una ⭐ en GitHub y compartirlo con tus amigos. ¡Gracias por tu apoyo! 🚀
 ```
 
-### ¿Cómo agregarlo?
-1. Guarda este contenido en un archivo `README.md` en la raíz de tu proyecto.
-2. Asegúrate de reemplazar los textos de ejemplo, como el email y capturas de pantalla, con información real de tu proyecto.
-
-¿Quieres personalizar aún más algún apartado o agregar una sección específica? 😊
 
 
