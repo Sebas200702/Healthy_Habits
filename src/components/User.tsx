@@ -13,10 +13,6 @@ export const User: React.FC<UserProps> = ({ sesion, pathname }) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if(window.matchMedia("(prefers-color-scheme: dark)").matches){
-        setTheme("dark");
-        return;
-      }
       const storedTheme = localStorage.getItem("theme") || "light";
       setTheme(storedTheme);
     }
