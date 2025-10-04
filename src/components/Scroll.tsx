@@ -1,30 +1,45 @@
-// src/components/ScrollToHash.tsx
-import { useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-const ScrollToHash: React.FC = () => {
-  useEffect(() => {
-    const handleScrollToHash = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const targetElement = document.querySelector(hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          console.warn(`Element not found for hash: ${hash}`);
+export default function Scroll () {
+
+    const [showButton, setShowButton] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const output = document.getElementById("output");
+            if (output) {
+                const isAtBottom = output.scrollHeight - output.scrollTop === output.clientHeight;
+                setShowButton(!isAtBottom);
+            }
         }
-      }
-    };
+        const output = document.getElementById("output");
+        if (output) {
+            output.addEventListener("scroll", handleScroll);
+        }
 
-    handleScrollToHash(); // Ejecutar al montar el componente
+        return () => {
+            if (output) {
+                output.removeEventListener("scroll", handleScroll);
+            }
+        }
 
-    window.addEventListener("hashchange", handleScrollToHash);
+    }, []);
 
-    return () => {
-      window.removeEventListener("hashchange", handleScrollToHash);
-    };
-  }, []);
+    const scrollToBottom = () => {
+        const output = document.getElementById("output");
+        if (output) {
+            output.scrollTop = output.scrollHeight;
+        }
+    }
 
-  return null; // No renderiza nada
-};
 
-export default ScrollToHash;
+    return (
+        <div>
+            {showButton && (
+                <button onClick={scrollToBottom} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    Scroll to Bottom
+                </button>
+            )}
+        </div>
+    );
+}
